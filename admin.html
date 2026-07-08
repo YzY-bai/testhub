@@ -484,7 +484,7 @@
   const ADMIN_STORAGE_KEY = 'testhub_admin_data';
   const VISIT_LOG_KEY = 'testhub_visit_log';
   const VISIT_STATS_KEY = 'testhub_visit_stats';
-  const API_URL = 'https://testhub-api.YOUR_SUBDOMAIN.workers.dev';  // 部署后替换
+  const API_URL = window.TESTHUB_API_URL || '';
 
   // Fetch stats from API (with localStorage fallback)
   async function fetchStats() {

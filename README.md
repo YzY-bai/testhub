@@ -51,15 +51,9 @@ wrangler deploy
 # 记录输出的 Worker URL
 ```
 
-### 第二步：更新前端配置
+### 第二步：部署前端
 
-编辑 `index.html` 和 `admin.html`，将 `API_URL` 替换为你的 Worker URL：
-
-```javascript
-const API_URL = 'https://testhub-api.你的用户名.workers.dev';
-```
-
-### 第三步：部署前端
+前端代码会自动读取环境变量 `window.TESTHUB_API_URL`，无需修改代码。
 
 #### 方法一：GitHub + Cloudflare Pages（推荐）
 

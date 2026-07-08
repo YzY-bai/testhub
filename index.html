@@ -2146,7 +2146,7 @@ function renderResultPage(score) {
 }
 
 // ========== Visit Tracking ==========
-const API_URL = 'https://testhub-api.YOUR_SUBDOMAIN.workers.dev';  // 部署后替换
+const API_URL = window.TESTHUB_API_URL || '';
 
 function trackVisit(testId, result, duration) {
   // 本地存储（备用/离线）
