@@ -615,28 +615,25 @@
     errorEl.style.display = 'none';
 
     try {
-      // 通过 Worker API 验证密码
-      if (API_URL) {
-        const resp = await fetch(`${API_URL}/api/auth`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password })
-        });
-        const data = await resp.json();
-        if (data.success) {
-          localStorage.setItem(LOGIN_KEY, 'true');
-          document.getElementById('loginPage').style.display = 'none';
-          document.getElementById('adminLayout').style.display = 'flex';
-          initAdmin();
-          return;
-        }
+      // 通过 Pages Function 验证密码（自动部署，无需单独部署 Worker）
+      const resp = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      const data = await resp.json();
+      if (data.success) {
+        localStorage.setItem(LOGIN_KEY, 'true');
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('adminLayout').style.display = 'flex';
+        initAdmin();
+        return;
+      } else {
+        errorEl.textContent = '密码错误，请重试';
+        errorEl.style.display = 'block';
       }
-      // 如果 API 不可用，使用本地验证（备用）
-      errorEl.textContent = '密码错误，请重试';
-      errorEl.style.display = 'block';
     } catch (err) {
-      // API 连接失败时使用本地验证
-      errorEl.textContent = '连接服务器失败，请重试';
+      errorEl.textContent = '连接服务器失败：' + err.message;
       errorEl.style.display = 'block';
     }
 
