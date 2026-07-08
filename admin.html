@@ -602,7 +602,7 @@
   };
 
   // ========== Login System ==========
-  const ADMIN_PASSWORD = 'testhub2024';  // 管理密码，可修改
+  const ADMIN_PASSWORD = window.TESTHUB_ADMIN_PASSWORD || 'testhub2024';
   const LOGIN_KEY = 'testhub_admin_login';
 
   function handleLogin(e) {
