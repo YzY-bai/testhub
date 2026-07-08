@@ -661,16 +661,14 @@
   const ADMIN_STORAGE_KEY = 'testhub_admin_data';
   const VISIT_LOG_KEY = 'testhub_visit_log';
   const VISIT_STATS_KEY = 'testhub_visit_stats';
-  const API_URL = window.TESTHUB_API_URL || '';
+  const API_URL = '';
 
-  // Fetch stats from API (with localStorage fallback)
+  // Fetch stats from Pages Functions API (with localStorage fallback)
   async function fetchStats() {
-    if (API_URL && !API_URL.includes('YOUR_SUBDOMAIN')) {
-      try {
-        const resp = await fetch(`${API_URL}/api/stats`);
-        if (resp.ok) return await resp.json();
-      } catch (e) {}
-    }
+    try {
+      const resp = await fetch('/api/stats');
+      if (resp.ok) return await resp.json();
+    } catch (e) {}
     // Fallback to localStorage
     const stats = getVisitStats();
     const log = getVisitLog();
@@ -704,6 +702,7 @@
 
   // Track visit
   function trackVisit(testId, result, duration) {
+    // 本地存储
     const log = getVisitLog();
     log.push({ testId, result, duration, time: Date.now() });
     saveVisitLog(log);
@@ -715,6 +714,13 @@
     if (!stats.testCounts) stats.testCounts = {};
     stats.testCounts[testId] = (stats.testCounts[testId] || 0) + 1;
     saveVisitStats(stats);
+
+    // 发送到 Pages Functions
+    fetch('/api/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ testId, result, duration })
+    }).catch(() => {});
   }
 
   // ========== Section Navigation ==========

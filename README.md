@@ -9,83 +9,14 @@
 - 精美的结果图表：MBTI维度条、九型柱状图、大五雷达图、分数环形图
 - 暗黑模式切换
 - 云端数据存储（Cloudflare KV + D1）
-- 后台管理系统
+- 后台管理系统（密码保护）
 
 ## 技术栈
 
 - 前端：纯 HTML/CSS/JavaScript
-- 后端：Cloudflare Workers
+- 后端：Cloudflare Pages Functions
 - 数据库：Cloudflare KV（缓存）+ D1（持久化）
-- 部署：Cloudflare Pages + Workers
-
-## 快速部署
-
-### 前置要求
-
-1. Node.js 18+
-2. Cloudflare 账号
-3. GitHub 账号
-
-### 第一步：部署后端 API
-
-```bash
-# 1. 安装 Wrangler CLI
-npm install -g wrangler
-
-# 2. 登录 Cloudflare
-wrangler login
-
-# 3. 创建 KV 命名空间
-wrangler kv:namespace create "KV"
-# 记录输出的 ID，更新到 wrangler.toml
-
-# 4. 创建 D1 数据库
-wrangler d1 create "testhub-db"
-# 记录输出的 ID，更新到 wrangler.toml
-
-# 5. 初始化数据库表
-wrangler d1 execute testhub-db --file=./api/schema.sql
-
-# 6. 部署 Worker
-wrangler deploy
-# 记录输出的 Worker URL
-```
-
-### 第二步：部署前端
-
-前端代码会自动读取环境变量 `window.TESTHUB_API_URL`，无需修改代码。
-
-#### 方法一：GitHub + Cloudflare Pages（推荐）
-
-```bash
-# 1. 创建 GitHub 仓库并上传代码
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/你的用户名/testhub.git
-git push -u origin main
-
-# 2. 在 Cloudflare 部署
-# 登录 Cloudflare → Workers & Pages → Create application → Pages
-# Connect to Git → 选择仓库
-# 配置：Build command 留空，Build output directory 填 /
-```
-
-#### 方法二：直接上传
-
-```bash
-# 登录 Cloudflare → Workers & Pages → Create application → Pages
-# Upload assets → 上传项目文件夹
-```
-
-### 第四步：配置自动部署（可选）
-
-在 GitHub 仓库 Settings → Secrets 中添加：
-
-- `CF_API_TOKEN`：Cloudflare API Token
-- `CF_ACCOUNT_ID`：Cloudflare Account ID
-
-之后每次 push 到 main 分支会自动部署。
+- 部署：Cloudflare Pages
 
 ## 文件结构
 
@@ -93,12 +24,13 @@ git push -u origin main
 ├── index.html              # 主页面
 ├── admin.html              # 后台管理
 ├── _headers                # HTTP 安全头配置
-├── _redirects              # URL 重定向规则
-├── wrangler.toml           # Cloudflare Workers 配置
-├── deploy.sh               # 部署脚本
-├── api/                    # 后端 API
-│   ├── index.js            # Worker 入口
-│   └── schema.sql          # D1 数据库表结构
+├── functions/              # Cloudflare Pages Functions（API）
+│   └── api/
+│       ├── auth.js         # 登录认证
+│       ├── track.js        # 记录访问
+│       ├── stats.js        # 获取统计
+│       ├── history.js      # 访问历史
+│       └── export.js       # 导出数据
 ├── data/                   # 题库数据
 │   ├── mbti.js             # MBTI 16型人格 (60题)
 │   ├── enneagram.js        # 九型人格 (90题)
@@ -111,6 +43,76 @@ git push -u origin main
     └── deploy.yml          # 自动部署配置
 ```
 
+## 部署步骤
+
+### 第一步：上传代码到 GitHub
+
+```bash
+git init
+git add .
+git commit -m "初始版本"
+git remote add origin https://github.com/你的用户名/testhub.git
+git push -u origin main
+```
+
+### 第二步：创建 Cloudflare Pages 项目
+
+1. 登录 https://dash.cloudflare.com
+2. **Workers & Pages** → **Create application** → **Pages**
+3. **Connect to Git** → 选择 GitHub 仓库
+4. 配置：
+   - Project name：`testhub`
+   - Build command：**留空**
+   - Build output directory：`/`
+5. 点击 **Save and Deploy**
+
+### 第三步：配置 KV 存储
+
+1. **Storage & Databases** → **KV** → **Create namespace**
+2. 名称：`TESTHUB`
+3. 创建后，在 Pages 项目 → **Settings** → **Bindings**
+4. 添加 KV Binding：
+   - Variable name：`KV`
+   - KV namespace：选择 `TESTHUB`
+
+### 第四步：配置 D1 数据库
+
+1. **Storage & Databases** → **D1 SQL 数据库** → **Create**
+2. 名称：`testhub-db`
+3. 在 D1 的 **Console** 中执行建表 SQL：
+
+```sql
+CREATE TABLE IF NOT EXISTS visits (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  test_id TEXT NOT NULL,
+  result TEXT,
+  duration INTEGER DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_visits_test_id ON visits(test_id);
+CREATE INDEX IF NOT EXISTS idx_visits_created_at ON visits(created_at);
+```
+
+4. 在 Pages 项目 → **Settings** → **Bindings**
+5. 添加 D1 Binding：
+   - Variable name：`DB`
+   - D1 database：选择 `testhub-db`
+
+### 第五步：配置环境变量
+
+在 Pages 项目 → **Settings** → **Environment variables** 添加：
+
+| Variable name | Value | 说明 |
+|---------------|-------|------|
+| `ADMIN_PASSWORD` | `你的密码` | 后台登录密码 |
+
+### 第六步：完成
+
+等待部署完成后访问：
+
+- 主站：`https://你的项目名.pages.dev`
+- 后台：`https://你的项目名.pages.dev/admin.html`
+
 ## 添加新测试
 
 1. 在 `data/` 目录创建新的 JS 文件
@@ -120,16 +122,15 @@ git push -u origin main
 
 ## 自定义域名
 
-1. 在 Cloudflare Pages 项目设置中添加自定义域名
-2. 添加 DNS 记录：
-   - 类型: `CNAME`
-   - 名称: `@` 或 `www`
-   - 目标: `your-project.pages.dev`
+1. 在 Pages 项目 → **Custom domains**
+2. 添加你的域名
+3. 配置 DNS：`CNAME` → `你的项目名.pages.dev`
 
 ## API 接口
 
 | 接口 | 方法 | 说明 |
 |------|------|------|
+| `/api/auth` | POST | 登录认证 |
 | `/api/track` | POST | 记录访问 |
 | `/api/stats` | GET | 获取统计数据 |
 | `/api/history` | GET | 获取访问历史 |

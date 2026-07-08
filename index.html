@@ -2146,7 +2146,7 @@ function renderResultPage(score) {
 }
 
 // ========== Visit Tracking ==========
-const API_URL = window.TESTHUB_API_URL || '';
+const API_URL = '';
 
 function trackVisit(testId, result, duration) {
   // 本地存储（备用/离线）
@@ -2167,14 +2167,12 @@ function trackVisit(testId, result, duration) {
     localStorage.setItem(VISIT_STATS_KEY, JSON.stringify(stats));
   } catch (e) {}
 
-  // 发送到云端 API（异步，失败时静默）
-  if (API_URL && !API_URL.includes('YOUR_SUBDOMAIN')) {
-    fetch(`${API_URL}/api/track`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ testId, result, duration })
-    }).catch(() => {});
-  }
+  // 发送到 Pages Functions API（异步，失败时静默）
+  fetch('/api/track', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ testId, result, duration })
+  }).catch(() => {});
 }
 
 // ========== Navigation Helpers ==========

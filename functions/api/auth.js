@@ -1,8 +1,6 @@
-// Cloudflare Pages Function - 认证接口
+// 认证接口
 export async function onRequestPost(context) {
   const { env } = context;
-  const request = context.request;
-
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -10,7 +8,7 @@ export async function onRequestPost(context) {
   };
 
   try {
-    const { password } = await request.json();
+    const { password } = await context.request.json();
     const correctPassword = env.ADMIN_PASSWORD || 'testhub2024';
 
     if (password === correctPassword) {
@@ -31,7 +29,6 @@ export async function onRequestPost(context) {
   }
 }
 
-// Handle CORS preflight
 export async function onRequestOptions() {
   return new Response(null, {
     headers: {
