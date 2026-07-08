@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TestHub 后台管理</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #2563eb;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-2: #475569;
+      --text-3: #94a3b8;
+      --border: #e2e8f0;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --font: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* Layout */
+    .admin-layout { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 240px;
+      background: #0f172a;
+      color: #fff;
+      padding: 24px 0;
+      flex-shrink: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      padding: 0 20px 24px;
+      border-bottom: 1px solid #1e293b;
+      margin-bottom: 16px;
+    }
+    .sidebar-logo h2 { font-size: 18px; font-weight: 700; }
+    .sidebar-logo span { font-size: 12px; color: #64748b; }
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.15s;
+      cursor: pointer;
+    }
+    .sidebar-nav a:hover { color: #fff; background: #1e293b; }
+    .sidebar-nav a.active { color: #fff; background: #1e293b; border-right: 3px solid var(--primary); }
+    .sidebar-nav a svg { width: 18px; height: 18px; }
+
+    .main-content {
+      flex: 1;
+      margin-left: 240px;
+      padding: 24px 32px;
+    }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .page-header h1 { font-size: 24px; font-weight: 700; }
+
+    /* Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid var(--border);
+    }
+    .stat-card .label { font-size: 13px; color: var(--text-3); margin-bottom: 8px; }
+    .stat-card .value { font-size: 28px; font-weight: 700; }
+    .stat-card .change { font-size: 12px; margin-top: 4px; }
+    .stat-card .change.up { color: var(--success); }
+    .stat-card .change.down { color: var(--danger); }
+
+    /* Table */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-header h3 { font-size: 16px; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px 16px; text-align: left; font-size: 14px; }
+    th { background: #f8fafc; font-weight: 600; color: var(--text-2); border-bottom: 1px solid var(--border); }
+    td { border-bottom: 1px solid var(--border); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8fafc; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .badge-success { background: #dcfce7; color: #16a34a; }
+    .badge-warning { background: #fef3c7; color: #d97706; }
+    .badge-danger { background: #fee2e2; color: #dc2626; }
+    .badge-info { background: #dbeafe; color: #2563eb; }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all 0.15s;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-2); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-danger { background: #fee2e2; color: #dc2626; }
+    .btn-danger:hover { background: #fecaca; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: var(--card);
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header h3 { font-size: 16px; font-weight: 600; }
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: var(--bg);
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-body { padding: 20px; }
+    .modal-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text-2); }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--primary);
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .question-item {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+    .question-item .q-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .question-item .q-num { font-weight: 600; font-size: 14px; }
+    .option-input {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .option-input input[type="text"] { flex: 1; }
+    .option-input input[type="radio"], .option-input input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+    }
+
+    .chart-placeholder {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+      color: var(--text-3);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h2>TestHub</h2>
+        <span>后台管理系统</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="active" onclick="showSection('dashboard')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          数据概览
+        </a>
+        <a onclick="showSection('tests')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          题库管理
+        </a>
+        <a onclick="showSection('visits')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          访问统计
+        </a>
+        <a onclick="showSection('settings')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          系统设置
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Dashboard -->
+      <div id="section-dashboard" class="section">
+        <div class="page-header">
+          <h1>数据概览</h1>
+          <button class="btn btn-outline" onclick="refreshData()">刷新数据</button>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="label">测试题库</div>
+            <div class="value" id="admin-total-tests">0</div>
+            <div class="change up">已上线</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">总题目数</div>
+            <div class="value" id="admin-total-questions">0</div>
+            <div class="change up">道题目</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">今日访问</div>
+            <div class="value" id="admin-today-visits">0</div>
+            <div class="change up" id="admin-visit-change">--</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">总访问量</div>
+            <div class="value" id="admin-total-visits">0</div>
+            <div class="change">累计</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>各测试访问量</h3>
+          </div>
+          <div style="padding:20px">
+            <canvas id="visitChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Test Management -->
+      <div id="section-tests" class="section" style="display:none">
+        <div class="page-header">
+          <h1>题库管理</h1>
+          <button class="btn btn-primary" onclick="showAddTestModal()">+ 新增测试</button>
+        </div>
+        <div class="card">
+          <table>
+            <thead>
+              <tr>
+                <th>测试名称</th>
+                <th>分类</th>
+                <th>题目数</th>
+                <th>状态</th>
+                <th>访问量</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="tests-table"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Visit Stats -->
+      <div id="section-visits" class="section" style="display:none">
+        <div class="page-header">
+          <h1>访问统计</h1>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="label">今日访问</div>
+            <div class="value" id="visit-today">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">本周访问</div>
+            <div class="value" id="visit-week">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">本月访问</div>
+            <div class="value" id="visit-month">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">总访问量</div>
+            <div class="value" id="visit-total">0</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>最近访问记录</h3>
+          </div>
+          <table>
+            <thead>
+              <tr><th>时间</th><th>测试</th><th>结果</th><th>耗时</th></tr>
+            </thead>
+            <tbody id="visit-log"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div id="section-settings" class="section" style="display:none">
+        <div class="page-header">
+          <h1>系统设置</h1>
+        </div>
+        <div class="card" style="padding:24px;max-width:480px">
+          <div class="form-group">
+            <label>导出所有数据</label>
+            <button class="btn btn-primary" onclick="exportData()">导出 JSON</button>
+          </div>
+          <div class="form-group">
+            <label>导入数据</label>
+            <input type="file" id="importFile" accept=".json" onchange="importData(event)">
+          </div>
+          <div class="form-group">
+            <label>清空所有访问记录</label>
+            <button class="btn btn-danger" onclick="clearAllVisits()">清空访问数据</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Edit Question Modal -->
+  <div class="modal-overlay" id="questionModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">编辑测试</h3>
+        <button class="modal-close" onclick="closeModal('questionModal')">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('questionModal')">取消</button>
+        <button class="btn btn-primary" onclick="saveQuestion()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="data/mbti.js"></script>
+  <script src="data/enneagram.js"></script>
+  <script src="data/fun.js"></script>
+  <script src="data/knowledge.js"></script>
+  <script src="data/personality.js"></script>
+  <script src="data/iq.js"></script>
+  <script src="data/career.js"></script>
+  <script>
+  // ========== Test Registry (same as main page) ==========
+  const tests = [
+    { id:'mbti', title:'MBTI 16型人格', desc:'了解你的性格类型，覆盖四大维度', cat:'personality', icon:'brain', time:'10 min', count:60, hot:true },
+    { id:'enneagram', title:'九型人格', desc:'探索九种人格类型的核心动机与成长', cat:'personality', icon:'crystal', time:'15 min', count:90, hot:true },
+    { id:'big5', title:'大五人格', desc:'科学评估开放性、尽责性等五大特质', cat:'personality', icon:'chart', time:'8 min', count:50 },
+    { id:'disc', title:'DISC 行为风格', desc:'了解你在工作中的行为风格偏好', cat:'personality', icon:'target', time:'6 min', count:28 },
+    { id:'holland', title:'霍兰德职业兴趣', desc:'发现最适合你的职业方向', cat:'personality', icon:'briefcase', time:'10 min', count:60 },
+    { id:'attachment', title:'依恋风格', desc:'了解亲密关系中的依恋模式', cat:'personality', icon:'heart', time:'7 min', count:40 },
+    { id:'eq', title:'情绪智力测试', desc:'评估情绪感知与管理能力', cat:'personality', icon:'waves', time:'8 min', count:30 },
+    { id:'temperament', title:'气质类型', desc:'多血质、胆汁质、粘液质还是抑郁质', cat:'personality', icon:'sparkle', time:'10 min', count:60 },
+    { id:'history', title:'趣味历史知识', desc:'从东方到西方，测试你的历史储备', cat:'knowledge', icon:'scroll', time:'5 min', count:15, hot:true },
+    { id:'science', title:'科学常识挑战', desc:'物理、化学、生物、天文冷知识', cat:'knowledge', icon:'flask', time:'5 min', count:15 },
+    { id:'geography', title:'地理知识考验', desc:'国家、首都、河流、山脉全测试', cat:'knowledge', icon:'globe', time:'5 min', count:15 },
+    { id:'english', title:'英语词汇量', desc:'快速测试你的词汇量水平', cat:'knowledge', icon:'type', time:'8 min', count:20 },
+    { id:'coding', title:'编程知识', desc:'前端、后端、算法知识综合测试', cat:'knowledge', icon:'code', time:'5 min', count:15 },
+    { id:'fruit', title:'你是哪种水果', desc:'根据性格偏好，测测你像哪种水果', cat:'fun', icon:'star', time:'3 min', count:8, hot:true },
+    { id:'pastlife', title:'你的前世身份', desc:'穿越时空，探索你的前世身份', cat:'fun', icon:'clock', time:'4 min', count:10 },
+    { id:'superpower', title:'隐藏超能力', desc:'测测你的隐藏天赋是什么', cat:'fun', icon:'zap', time:'3 min', count:12 },
+    { id:'love', title:'爱情匹配度', desc:'看看你和 TA 的默契指数有多高', cat:'fun', icon:'heart', time:'5 min', count:12 },
+    { id:'social', title:'社交人格画像', desc:'测测你的社交风格与人格特征', cat:'fun', icon:'users', time:'4 min', count:10 },
+    { id:'logic', title:'逻辑推理', desc:'图形推理、数字规律、逻辑判断', cat:'iq', icon:'cube', time:'8 min', count:15 },
+    { id:'spatial', title:'空间想象力', desc:'旋转、折叠、拼接视觉测试', cat:'iq', icon:'compass', time:'6 min', count:10 },
+    { id:'number', title:'数字敏感度', desc:'数字推理、速算、概率判断', cat:'iq', icon:'hash', time:'8 min', count:15 },
+    { id:'creativity', title:'创造力指数', desc:'发散思维、创新联想能力测试', cat:'iq', icon:'palette', time:'10 min', count:15 },
+    { id:'values', title:'职业价值观', desc:'高薪、稳定、自由，你最看重什么', cat:'career', icon:'award', time:'8 min', count:30 },
+    { id:'leadership', title:'领导力风格', desc:'找到你的领导风格与管理方式', cat:'career', icon:'briefcase', time:'6 min', count:25 },
+    { id:'learning', title:'学习风格 VARK', desc:'找到最适合你的学习方式', cat:'career', icon:'book', time:'5 min', count:20 },
+    { id:'stress', title:'压力管理能力', desc:'评估压力应对方式与心理韧性', cat:'career', icon:'coffee', time:'5 min', count:15 },
+  ];
+
+  const DATA_MAP = {
+    mbti: () => typeof MBTI_DATA !== 'undefined' ? MBTI_DATA : null,
+    enneagram: () => typeof ENNEAGRAM_DATA !== 'undefined' ? ENNEAGRAM_DATA : null,
+    fruit: () => typeof FUN_DATA !== 'undefined' ? FUN_DATA.fruit : null,
+    superpower: () => typeof FUN_DATA !== 'undefined' ? FUN_DATA.superpower : null,
+    pastlife: () => typeof FUN_DATA !== 'undefined' ? FUN_DATA.pastlife : null,
+    love: () => typeof FUN_DATA !== 'undefined' ? FUN_DATA.love : null,
+    social: () => typeof FUN_DATA !== 'undefined' ? FUN_DATA.social : null,
+    history: () => typeof KNOWLEDGE_DATA !== 'undefined' ? KNOWLEDGE_DATA.history : null,
+    coding: () => typeof KNOWLEDGE_DATA !== 'undefined' ? KNOWLEDGE_DATA.coding : null,
+    science: () => typeof KNOWLEDGE_DATA !== 'undefined' ? KNOWLEDGE_DATA.science : null,
+    geography: () => typeof KNOWLEDGE_DATA !== 'undefined' ? KNOWLEDGE_DATA.geography : null,
+    english: () => typeof KNOWLEDGE_DATA !== 'undefined' ? KNOWLEDGE_DATA.english : null,
+    big5: () => typeof BIG5_DATA !== 'undefined' ? BIG5_DATA : null,
+    holland: () => typeof HOLLAND_DATA !== 'undefined' ? HOLLAND_DATA : null,
+    logic: () => typeof IQ_DATA !== 'undefined' ? IQ_DATA.logic : null,
+    number: () => typeof IQ_DATA !== 'undefined' ? IQ_DATA.number : null,
+    spatial: () => typeof IQ_DATA !== 'undefined' ? IQ_DATA.spatial : null,
+    creativity: () => typeof IQ_DATA !== 'undefined' ? IQ_DATA.creativity : null,
+    disc: () => typeof DISC_DATA !== 'undefined' ? DISC_DATA : null,
+    attachment: () => typeof ATTACHMENT_DATA !== 'undefined' ? ATTACHMENT_DATA : null,
+    eq: () => typeof EQ_DATA !== 'undefined' ? EQ_DATA : null,
+    temperament: () => typeof TEMPERAMENT_DATA !== 'undefined' ? TEMPERAMENT_DATA : null,
+    values: () => typeof CAREER_DATA !== 'undefined' ? CAREER_DATA.values : null,
+    leadership: () => typeof CAREER_DATA !== 'undefined' ? CAREER_DATA.leadership : null,
+    learning: () => typeof CAREER_DATA !== 'undefined' ? CAREER_DATA.learning : null,
+    stress: () => typeof CAREER_DATA !== 'undefined' ? CAREER_DATA.stress : null,
+  };
+
+  // ========== Data Management ==========
+  const ADMIN_STORAGE_KEY = 'testhub_admin_data';
+  const VISIT_LOG_KEY = 'testhub_visit_log';
+  const VISIT_STATS_KEY = 'testhub_visit_stats';
+  const API_URL = 'https://testhub-api.YOUR_SUBDOMAIN.workers.dev';  // 部署后替换
+
+  // Fetch stats from API (with localStorage fallback)
+  async function fetchStats() {
+    if (API_URL && !API_URL.includes('YOUR_SUBDOMAIN')) {
+      try {
+        const resp = await fetch(`${API_URL}/api/stats`);
+        if (resp.ok) return await resp.json();
+      } catch (e) {}
+    }
+    // Fallback to localStorage
+    const stats = getVisitStats();
+    const log = getVisitLog();
+    return {
+      total: stats.total || 0,
+      today: stats.daily[new Date().toISOString().split('T')[0]] || 0,
+      todayTests: {},
+      testCounts: stats.testCounts || {},
+      recentLog: log.slice(0, 20)
+    };
+  }
+
+  function getAdminData() {
+    try { return JSON.parse(localStorage.getItem(ADMIN_STORAGE_KEY)) || {}; } catch { return {}; }
+  }
+  function saveAdminData(data) {
+    localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(data));
+  }
+  function getVisitLog() {
+    try { return JSON.parse(localStorage.getItem(VISIT_LOG_KEY)) || []; } catch { return []; }
+  }
+  function saveVisitLog(log) {
+    localStorage.setItem(VISIT_LOG_KEY, JSON.stringify(log.slice(-500))); // Keep last 500
+  }
+  function getVisitStats() {
+    try { return JSON.parse(localStorage.getItem(VISIT_STATS_KEY)) || { total: 0, daily: {} }; } catch { return { total: 0, daily: {} }; }
+  }
+  function saveVisitStats(stats) {
+    localStorage.setItem(VISIT_STATS_KEY, JSON.stringify(stats));
+  }
+
+  // Track visit
+  function trackVisit(testId, result, duration) {
+    const log = getVisitLog();
+    log.push({ testId, result, duration, time: Date.now() });
+    saveVisitLog(log);
+
+    const stats = getVisitStats();
+    stats.total++;
+    const today = new Date().toISOString().split('T')[0];
+    stats.daily[today] = (stats.daily[today] || 0) + 1;
+    if (!stats.testCounts) stats.testCounts = {};
+    stats.testCounts[testId] = (stats.testCounts[testId] || 0) + 1;
+    saveVisitStats(stats);
+  }
+
+  // ========== Section Navigation ==========
+  function showSection(name) {
+    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    document.getElementById('section-' + name).style.display = 'block';
+    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    event.target.closest('a').classList.add('active');
+    if (name === 'dashboard') refreshData();
+    if (name === 'visits') refreshVisits();
+    if (name === 'tests') refreshTestsTable();
+  }
+
+  // ========== Dashboard ==========
+  async function refreshData() {
+    // Count tests and questions
+    let totalTests = 0, totalQuestions = 0;
+    const testList = typeof tests !== 'undefined' ? tests : [];
+    totalTests = testList.length;
+    testList.forEach(t => {
+      const getter = typeof DATA_MAP !== 'undefined' ? DATA_MAP[t.id] : null;
+      if (getter) {
+        const data = getter();
+        if (data && data.questions) totalQuestions += data.questions.length;
+      }
+    });
+    document.getElementById('admin-total-tests').textContent = totalTests;
+    document.getElementById('admin-total-questions').textContent = totalQuestions.toLocaleString();
+
+    // Visit stats (from API or localStorage)
+    const stats = await fetchStats();
+    document.getElementById('admin-today-visits').textContent = stats.today || 0;
+    document.getElementById('admin-total-visits').textContent = stats.total || 0;
+
+    // Draw visit chart
+    drawVisitChart(stats.testCounts || {});
+  }
+
+  function drawVisitChart(testCounts) {
+    const canvas = document.getElementById('visitChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width = canvas.parentElement.clientWidth;
+    const h = canvas.height = 200;
+    ctx.clearRect(0, 0, w, h);
+
+    const entries = Object.entries(testCounts || {}).sort((a,b) => b[1] - a[1]).slice(0, 10);
+
+    if (entries.length === 0) {
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('暂无访问数据', w/2, h/2);
+      return;
+    }
+
+    const maxVal = Math.max(...entries.map(e => e[1]));
+    const barW = Math.min(40, (w - 80) / entries.length - 8);
+    const chartH = h - 50;
+    const startX = 60;
+
+    // Grid
+    for (let i = 0; i <= 4; i++) {
+      const y = 20 + chartH * (1 - i/4);
+      ctx.strokeStyle = '#e2e8f0';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(startX, y);
+      ctx.lineTo(w - 20, y);
+      ctx.stroke();
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(Math.round(maxVal * i/4), startX - 8, y + 4);
+    }
+
+    // Bars
+    const gap = (w - startX - 40) / entries.length;
+    const colors = ['#2563eb','#7c3aed','#db2777','#ea580c','#16a34a','#0891b2','#4f46e5','#c026d3','#d97706','#059669'];
+    entries.forEach(([id, count], i) => {
+      const x = startX + i * gap + (gap - barW) / 2;
+      const barH = (count / maxVal) * chartH;
+      const y = 20 + chartH - barH;
+
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.beginPath();
+      ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
+      ctx.fill();
+
+      // Label
+      ctx.fillStyle = '#64748b';
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      const test = tests.find(t => t.id === id);
+      const label = test ? (test.title.length > 6 ? test.title.substring(0,6) + '..' : test.title) : id;
+      ctx.fillText(label, x + barW/2, h - 5);
+
+      // Value
+      ctx.fillStyle = '#0f172a';
+      ctx.font = '600 11px sans-serif';
+      ctx.fillText(count, x + barW/2, y - 6);
+    });
+  }
+
+  // ========== Test Management ==========
+  function refreshTestsTable() {
+    const testList = typeof tests !== 'undefined' ? tests : [];
+    const stats = getVisitStats();
+    const tbody = document.getElementById('tests-table');
+    tbody.innerHTML = testList.map(t => {
+      const getter = typeof DATA_MAP !== 'undefined' ? DATA_MAP[t.id] : null;
+      let qCount = 0;
+      if (getter) {
+        const data = getter();
+        if (data && data.questions) qCount = data.questions.length;
+      }
+      const visits = (stats.testCounts || {})[t.id] || 0;
+      const catLabels = { personality:'人格心理', knowledge:'知识测试', fun:'趣味娱乐', iq:'智力能力', career:'职业发展' };
+      return `<tr>
+        <td><strong>${t.title}</strong><br><span style="color:var(--text-3);font-size:12px">${t.desc}</span></td>
+        <td><span class="badge badge-info">${catLabels[t.cat] || t.cat}</span></td>
+        <td>${qCount}</td>
+        <td><span class="badge badge-success">已上线</span></td>
+        <td>${visits}</td>
+        <td>
+          <button class="btn btn-sm btn-outline" onclick="viewTest('${t.id}')">查看</button>
+          <button class="btn btn-sm btn-outline" onclick="editTest('${t.id}')">编辑</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  function viewTest(testId) {
+    window.open('index.html#quiz/' + testId, '_blank');
+  }
+
+  function editTest(testId) {
+    const getter = typeof DATA_MAP !== 'undefined' ? DATA_MAP[testId] : null;
+    if (!getter) { alert('无法加载该测试数据'); return; }
+    const data = getter();
+    if (!data || !data.questions) { alert('测试数据为空'); return; }
+
+    const test = tests.find(t => t.id === testId);
+    let html = `
+      <div class="form-group">
+        <label>测试名称</label>
+        <input type="text" id="edit-title" value="${data.title}">
+      </div>
+      <div class="form-group">
+        <label>题目数量：${data.questions.length} 题</label>
+      </div>
+      <div style="max-height:400px;overflow-y:auto">
+    `;
+
+    data.questions.slice(0, 20).forEach((q, i) => {
+      html += `
+        <div class="question-item">
+          <div class="q-header">
+            <span class="q-num">Q${i+1}</span>
+          </div>
+          <div style="font-size:13px;margin-bottom:8px;color:var(--text-2)">${q.text}</div>
+          <div style="font-size:12px;color:var(--text-3)">
+            ${q.options.map((o, j) => `<div>${j+1}. ${o.text} ${o.correct ? '✓' : ''}</div>`).join('')}
+          </div>
+        </div>
+      `;
+    });
+
+    if (data.questions.length > 20) {
+      html += `<div style="text-align:center;padding:12px;color:var(--text-3);font-size:13px">... 还有 ${data.questions.length - 20} 题</div>`;
+    }
+
+    html += '</div>';
+    document.getElementById('modal-title').textContent = '编辑: ' + data.title;
+    document.getElementById('modal-body').innerHTML = html;
+    document.getElementById('questionModal').classList.add('active');
+  }
+
+  function showAddTestModal() {
+    document.getElementById('modal-title').textContent = '新增测试';
+    document.getElementById('modal-body').innerHTML = `
+      <div class="form-group">
+        <label>测试名称</label>
+        <input type="text" id="new-test-title" placeholder="输入测试名称">
+      </div>
+      <div class="form-group">
+        <label>测试分类</label>
+        <select id="new-test-cat">
+          <option value="personality">人格心理</option>
+          <option value="knowledge">知识测试</option>
+          <option value="fun">趣味娱乐</option>
+          <option value="iq">智力能力</option>
+          <option value="career">职业发展</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>测试描述</label>
+        <textarea id="new-test-desc" placeholder="简短描述测试内容"></textarea>
+      </div>
+      <p style="font-size:13px;color:var(--text-3);margin-top:12px">
+        提示：新增测试需要在代码中添加题库数据文件。此表单仅用于在管理界面注册测试信息。
+      </p>
+    `;
+    document.getElementById('questionModal').classList.add('active');
+  }
+
+  function saveQuestion() {
+    closeModal('questionModal');
+    alert('保存成功！');
+  }
+
+  // ========== Visit Stats ==========
+  async function refreshVisits() {
+    const stats = await fetchStats();
+    const log = stats.recentLog || [];
+
+    document.getElementById('visit-today').textContent = stats.today || 0;
+    document.getElementById('visit-total').textContent = stats.total || 0;
+
+    // Calculate week/month from log
+    const now = Date.now();
+    const weekAgo = now - 7 * 86400000;
+    const monthAgo = now - 30 * 86400000;
+    const weekVisits = log.filter(l => l.time > weekAgo).length;
+    const monthVisits = log.filter(l => l.time > monthAgo).length;
+    document.getElementById('visit-week').textContent = weekVisits;
+    document.getElementById('visit-month').textContent = monthVisits;
+
+    // Visit log table
+    const tbody = document.getElementById('visit-log');
+    tbody.innerHTML = log.map(l => {
+      const test = typeof tests !== 'undefined' ? tests.find(t => t.id === l.testId) : null;
+      const time = new Date(l.time).toLocaleString('zh-CN');
+      return `<tr>
+        <td style="font-size:12px;color:var(--text-3)">${time}</td>
+        <td>${test ? test.title : l.testId}</td>
+        <td>${l.result || '-'}</td>
+        <td>${l.duration ? Math.round(l.duration/1000) + 's' : '-'}</td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:24px">暂无访问记录</td></tr>';
+  }
+
+  // ========== Settings ==========
+  function exportData() {
+    const data = {
+      visitLog: getVisitLog(),
+      visitStats: getVisitStats(),
+      adminData: getAdminData(),
+      exportTime: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'testhub-backup-' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.visitLog) saveVisitLog(data.visitLog);
+        if (data.visitStats) saveVisitStats(data.visitStats);
+        if (data.adminData) saveAdminData(data.adminData);
+        alert('导入成功！');
+        refreshData();
+      } catch (err) {
+        alert('导入失败：' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function clearAllVisits() {
+    if (confirm('确定要清空所有访问数据吗？此操作不可恢复。')) {
+      localStorage.removeItem(VISIT_LOG_KEY);
+      localStorage.removeItem(VISIT_STATS_KEY);
+      refreshData();
+      alert('已清空');
+    }
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+  }
+
+  // ========== Init ==========
+  async function initAdmin() {
+    await refreshData();
+    // Track this page visit
+    trackVisit('admin', 'admin_panel', 0);
+  }
+
+  // Auto-init when page loads
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAdmin);
+  } else {
+    initAdmin();
+  }
+  </script>
+</body>
+</html>

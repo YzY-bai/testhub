@@ -1,0 +1,18 @@
+name = "testhub-api"
+main = "api/index.js"
+compatibility_date = "2024-01-01"
+
+# KV 命名空间（统计缓存 + 配置）
+[[kv_namespaces]]
+binding = "KV"
+id = "YOUR_KV_NAMESPACE_ID"  # 部署后替换
+
+# D1 数据库（详细访问记录）
+[[d1_databases]]
+binding = "DB"
+database_name = "testhub-db"
+database_id = "YOUR_D1_DATABASE_ID"  # 部署后替换
+
+# 环境变量
+[vars]
+ENVIRONMENT = "production"
