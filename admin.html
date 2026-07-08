@@ -8,339 +8,173 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --primary: #2563eb;
-      --bg: #f1f5f9;
+      --primary-light: #3b82f6;
+      --bg: #f8fafc;
       --card: #ffffff;
       --text: #0f172a;
       --text-2: #475569;
       --text-3: #94a3b8;
       --border: #e2e8f0;
-      --success: #22c55e;
+      --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
       --radius: 12px;
-      --font: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Microsoft YaHei', sans-serif;
     }
     body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; }
 
-    /* Login Page */
-    .login-page {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    }
-    .login-card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 40px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-    }
-    .login-logo {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .login-logo .icon {
-      width: 64px;
-      height: 64px;
-      background: var(--text);
-      border-radius: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-    .login-logo .icon::after {
-      content: '';
-      width: 24px;
-      height: 24px;
-      border: 3px solid #fff;
-      border-radius: 50%;
-    }
-    .login-logo h1 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .login-logo p {
-      font-size: 14px;
-      color: var(--text-3);
-    }
-    .login-form .form-group {
-      margin-bottom: 20px;
-    }
-    .login-form label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 8px;
-      color: var(--text-2);
-    }
-    .login-form input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 15px;
-      font-family: var(--font);
-      outline: none;
-      transition: all 0.2s;
-    }
-    .login-form input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
-    }
-    .login-btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--text);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: var(--font);
-    }
-    .login-btn:hover {
-      background: #1e293b;
-    }
-    .login-error {
-      display: none;
-      padding: 10px 14px;
-      background: #fee2e2;
-      color: #dc2626;
-      border-radius: 8px;
-      font-size: 13px;
-      margin-bottom: 16px;
-    }
+    /* Login */
+    .login-page { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+    .login-card { background: var(--card); border-radius: 20px; padding: 48px 40px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+    .login-logo { text-align: center; margin-bottom: 36px; }
+    .login-logo .icon { width: 72px; height: 72px; background: var(--text); border-radius: 18px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+    .login-logo .icon::after { content: ''; width: 28px; height: 28px; border: 3px solid #fff; border-radius: 50%; }
+    .login-logo h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.5px; }
+    .login-logo p { font-size: 14px; color: var(--text-3); }
+    .login-form .form-group { margin-bottom: 20px; }
+    .login-form label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 8px; color: var(--text-2); }
+    .login-form input { width: 100%; padding: 13px 16px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 15px; font-family: var(--font); outline: none; transition: all 0.2s; }
+    .login-form input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37,99,235,0.08); }
+    .login-btn { width: 100%; padding: 14px; background: var(--text); color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: var(--font); }
+    .login-btn:hover { background: #1e293b; transform: translateY(-1px); }
+    .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .login-error { display: none; padding: 12px 16px; background: #fef2f2; color: #dc2626; border-radius: 8px; font-size: 13px; margin-bottom: 16px; border: 1px solid #fecaca; }
 
     /* Layout */
     .admin-layout { display: flex; min-height: 100vh; }
-    .sidebar {
-      width: 240px;
-      background: #0f172a;
-      color: #fff;
-      padding: 24px 0;
-      flex-shrink: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      overflow-y: auto;
-    }
-    .sidebar-logo {
-      padding: 0 20px 24px;
-      border-bottom: 1px solid #1e293b;
-      margin-bottom: 16px;
-    }
-    .sidebar-logo h2 { font-size: 18px; font-weight: 700; }
-    .sidebar-logo span { font-size: 12px; color: #64748b; }
-    .sidebar-nav a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 20px;
-      color: #94a3b8;
-      text-decoration: none;
-      font-size: 14px;
-      transition: all 0.15s;
-      cursor: pointer;
-    }
-    .sidebar-nav a:hover { color: #fff; background: #1e293b; }
-    .sidebar-nav a.active { color: #fff; background: #1e293b; border-right: 3px solid var(--primary); }
-    .sidebar-nav { display: flex; flex-direction: column; height: calc(100% - 80px); }
-    .sidebar-nav a svg { width: 18px; height: 18px; }
+    .sidebar { width: 260px; background: #0f172a; color: #fff; flex-shrink: 0; position: fixed; top: 0; left: 0; bottom: 0; display: flex; flex-direction: column; z-index: 50; }
+    .sidebar-logo { padding: 24px 24px 20px; border-bottom: 1px solid #1e293b; }
+    .sidebar-logo h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+    .sidebar-logo span { font-size: 12px; color: #64748b; display: block; margin-top: 2px; }
+    .sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 11px 24px; color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.15s; cursor: pointer; border-left: 3px solid transparent; }
+    .sidebar-nav a:hover { color: #fff; background: rgba(255,255,255,0.04); }
+    .sidebar-nav a.active { color: #fff; background: rgba(37,99,235,0.15); border-left-color: var(--primary); }
+    .sidebar-nav a svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .sidebar-footer { padding: 16px 24px; border-top: 1px solid #1e293b; }
+    .sidebar-footer a { display: flex; align-items: center; gap: 10px; padding: 10px 0; color: #64748b; text-decoration: none; font-size: 13px; cursor: pointer; transition: color 0.15s; }
+    .sidebar-footer a:hover { color: #ef4444; }
+    .sidebar-footer a svg { width: 16px; height: 16px; }
 
-    .main-content {
-      flex: 1;
-      margin-left: 240px;
-      padding: 24px 32px;
-    }
-    .page-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 24px;
-    }
-    .page-header h1 { font-size: 24px; font-weight: 700; }
+    .main-content { flex: 1; margin-left: 260px; padding: 28px 36px; min-height: 100vh; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+    .page-header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+    .page-header .subtitle { font-size: 14px; color: var(--text-3); margin-top: 2px; }
 
-    /* Cards */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .stat-card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 20px;
-      border: 1px solid var(--border);
-    }
-    .stat-card .label { font-size: 13px; color: var(--text-3); margin-bottom: 8px; }
-    .stat-card .value { font-size: 28px; font-weight: 700; }
-    .stat-card .change { font-size: 12px; margin-top: 4px; }
+    /* Stats Grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .stat-card { background: var(--card); border-radius: var(--radius); padding: 22px; border: 1px solid var(--border); transition: all 0.2s; }
+    .stat-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+    .stat-card .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .stat-card .label { font-size: 13px; color: var(--text-3); font-weight: 500; }
+    .stat-card .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+    .stat-card .icon svg { width: 20px; height: 20px; }
+    .stat-card .icon.blue { background: #eff6ff; color: #2563eb; }
+    .stat-card .icon.green { background: #f0fdf4; color: #16a34a; }
+    .stat-card .icon.purple { background: #faf5ff; color: #9333ea; }
+    .stat-card .icon.orange { background: #fff7ed; color: #ea580c; }
+    .stat-card .value { font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+    .stat-card .change { font-size: 12px; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
     .stat-card .change.up { color: var(--success); }
     .stat-card .change.down { color: var(--danger); }
 
-    /* Table */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
-    .card-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    /* Cards */
+    .card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
     .card-header h3 { font-size: 16px; font-weight: 600; }
+    .card-body { padding: 24px; }
+
+    /* Table */
     table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 12px 16px; text-align: left; font-size: 14px; }
-    th { background: #f8fafc; font-weight: 600; color: var(--text-2); border-bottom: 1px solid var(--border); }
+    th, td { padding: 14px 20px; text-align: left; font-size: 14px; }
+    th { background: #f8fafc; font-weight: 600; color: var(--text-2); border-bottom: 1px solid var(--border); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
     td { border-bottom: 1px solid var(--border); }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #f8fafc; }
 
-    .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-    }
+    .badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; }
     .badge-success { background: #dcfce7; color: #16a34a; }
     .badge-warning { background: #fef3c7; color: #d97706; }
     .badge-danger { background: #fee2e2; color: #dc2626; }
     .badge-info { background: #dbeafe; color: #2563eb; }
+    .badge-purple { background: #f3e8ff; color: #9333ea; }
 
-    .btn {
-      padding: 8px 16px;
-      border-radius: 8px;
-      border: none;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      font-family: var(--font);
-      transition: all 0.15s;
-    }
+    /* Buttons */
+    .btn { padding: 9px 18px; border-radius: 8px; border: none; font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--font); transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; }
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-primary:hover { background: #1d4ed8; }
-    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
     .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-2); }
-    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
-    .btn-danger { background: #fee2e2; color: #dc2626; }
-    .btn-danger:hover { background: #fecaca; }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); background: #f8fafc; }
+    .btn-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .btn-danger:hover { background: #fee2e2; }
+    .btn-ghost { background: transparent; color: var(--text-2); }
+    .btn-ghost:hover { background: #f1f5f9; }
+
+    /* Filter Tabs */
+    .filter-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+    .filter-tab { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: var(--font); }
+    .filter-tab:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* Search */
+    .search-box { position: relative; margin-bottom: 20px; }
+    .search-box input { width: 100%; padding: 10px 16px 10px 40px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-family: var(--font); outline: none; background: var(--card); }
+    .search-box input:focus { border-color: var(--primary); }
+    .search-box svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-3); }
+
+    /* Chart Container */
+    .chart-container { position: relative; height: 280px; }
+    .chart-container canvas { width: 100% !important; height: 100% !important; }
+
+    /* Settings */
+    .settings-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .setting-item { padding: 20px; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); }
+    .setting-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .setting-item p { font-size: 13px; color: var(--text-3); margin-bottom: 12px; line-height: 1.5; }
 
     /* Modal */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-    }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100; align-items: center; justify-content: center; }
     .modal-overlay.active { display: flex; }
-    .modal {
-      background: var(--card);
-      border-radius: var(--radius);
-      width: 90%;
-      max-width: 600px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    .modal-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .modal-header h3 { font-size: 16px; font-weight: 600; }
-    .modal-close {
-      width: 32px; height: 32px;
-      border-radius: 8px;
-      border: none;
-      background: var(--bg);
-      cursor: pointer;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-body { padding: 20px; }
-    .modal-footer {
-      padding: 16px 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
+    .modal { background: var(--card); border-radius: 16px; width: 90%; max-width: 640px; max-height: 85vh; overflow: hidden; animation: modalIn 0.2s ease; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+    .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .modal-header h3 { font-size: 18px; font-weight: 600; }
+    .modal-close { width: 36px; height: 36px; border-radius: 10px; border: none; background: var(--bg); cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+    .modal-close:hover { background: var(--border); }
+    .modal-body { padding: 24px; max-height: 60vh; overflow-y: auto; }
+    .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
 
-    .form-group { margin-bottom: 16px; }
+    .form-group { margin-bottom: 18px; }
     .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: var(--text-2); }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: var(--font);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-      border-color: var(--primary);
-    }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-family: var(--font); outline: none; transition: border-color 0.15s; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--primary); }
     .form-group textarea { resize: vertical; min-height: 80px; }
 
-    .question-item {
-      background: #f8fafc;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 12px;
-      border: 1px solid var(--border);
-    }
-    .question-item .q-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-    .question-item .q-num { font-weight: 600; font-size: 14px; }
-    .option-input {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
-    .option-input input[type="text"] { flex: 1; }
-    .option-input input[type="radio"], .option-input input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-    }
+    /* Empty State */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-3); }
+    .empty-state svg { width: 64px; height: 64px; margin-bottom: 16px; opacity: 0.3; }
+    .empty-state p { font-size: 14px; }
 
-    .chart-placeholder {
-      background: #f8fafc;
-      border-radius: 8px;
-      padding: 40px;
-      text-align: center;
-      color: var(--text-3);
-    }
-
-    @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .main-content { margin-left: 0; }
+    /* Responsive */
+    @media (max-width: 1024px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .settings-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { width: 72px; }
+      .sidebar-logo h2, .sidebar-logo span, .sidebar-nav a span:not(.icon-only) { display: none; }
+      .sidebar-nav a { justify-content: center; padding: 12px; }
+      .sidebar-footer a span { display: none; }
+      .main-content { margin-left: 72px; padding: 20px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .page-header h1 { font-size: 20px; }
+      table { font-size: 13px; }
+      th, td { padding: 10px 12px; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .filter-tabs { overflow-x: auto; flex-wrap: nowrap; }
     }
   </style>
 </head>
@@ -354,7 +188,7 @@
         <p>后台管理系统</p>
       </div>
       <form class="login-form" onsubmit="handleLogin(event)">
-        <div class="login-error" id="loginError">密码错误，请重试</div>
+        <div class="login-error" id="loginError"></div>
         <div class="form-group">
           <label>管理员密码</label>
           <input type="password" id="loginPassword" placeholder="请输入密码" autofocus>
@@ -364,75 +198,103 @@
     </div>
   </div>
 
-  <!-- Admin Layout (hidden until login) -->
+  <!-- Admin Layout -->
   <div class="admin-layout" id="adminLayout" style="display:none">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-logo">
         <h2>TestHub</h2>
-        <span>后台管理系统</span>
+        <span>后台管理</span>
       </div>
       <nav class="sidebar-nav">
         <a class="active" onclick="showSection('dashboard')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          数据概览
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>数据概览</span>
         </a>
         <a onclick="showSection('tests')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          题库管理
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>题库管理</span>
         </a>
         <a onclick="showSection('visits')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          访问统计
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>访问统计</span>
         </a>
         <a onclick="showSection('settings')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          系统设置
-        </a>
-        <a onclick="logout()" style="margin-top:auto;border-top:1px solid #1e293b;padding-top:16px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          退出登录
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>系统设置</span>
         </a>
       </nav>
+      <div class="sidebar-footer">
+        <a onclick="logout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>退出登录</span>
+        </a>
+      </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
       <!-- Dashboard -->
       <div id="section-dashboard" class="section">
         <div class="page-header">
-          <h1>数据概览</h1>
-          <button class="btn btn-outline" onclick="refreshData()">刷新数据</button>
+          <div>
+            <h1>数据概览</h1>
+            <div class="subtitle">实时监控测试平台运营数据</div>
+          </div>
+          <button class="btn btn-outline" onclick="refreshData()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            刷新
+          </button>
         </div>
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="label">测试题库</div>
+            <div class="header">
+              <div class="label">测试题库</div>
+              <div class="icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            </div>
             <div class="value" id="admin-total-tests">0</div>
-            <div class="change up">已上线</div>
+            <div class="change up">已上线运行</div>
           </div>
           <div class="stat-card">
-            <div class="label">总题目数</div>
+            <div class="header">
+              <div class="label">总题目数</div>
+              <div class="icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            </div>
             <div class="value" id="admin-total-questions">0</div>
-            <div class="change up">道题目</div>
+            <div class="change up">道测试题目</div>
           </div>
           <div class="stat-card">
-            <div class="label">今日访问</div>
+            <div class="header">
+              <div class="label">今日访问</div>
+              <div class="icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            </div>
             <div class="value" id="admin-today-visits">0</div>
-            <div class="change up" id="admin-visit-change">--</div>
+            <div class="change" id="admin-visit-change">较昨日</div>
           </div>
           <div class="stat-card">
-            <div class="label">总访问量</div>
+            <div class="header">
+              <div class="label">累计访问</div>
+              <div class="icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            </div>
             <div class="value" id="admin-total-visits">0</div>
-            <div class="change">累计</div>
+            <div class="change">历史总计</div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h3>各测试访问量</h3>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px">
+          <div class="card">
+            <div class="card-header">
+              <h3>访问趋势（最近7天）</h3>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+              </div>
+            </div>
           </div>
-          <div style="padding:20px">
-            <canvas id="visitChart" height="200"></canvas>
+          <div class="card">
+            <div class="card-header">
+              <h3>分类统计</h3>
+            </div>
+            <div class="card-body" id="categoryStats"></div>
           </div>
         </div>
       </div>
@@ -440,8 +302,23 @@
       <!-- Test Management -->
       <div id="section-tests" class="section" style="display:none">
         <div class="page-header">
-          <h1>题库管理</h1>
+          <div>
+            <h1>题库管理</h1>
+            <div class="subtitle">管理所有测试题库和题目</div>
+          </div>
           <button class="btn btn-primary" onclick="showAddTestModal()">+ 新增测试</button>
+        </div>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="testSearch" placeholder="搜索测试名称..." oninput="filterTests()">
+        </div>
+        <div class="filter-tabs" id="testFilters">
+          <button class="filter-tab active" onclick="filterByCat('all', this)">全部</button>
+          <button class="filter-tab" onclick="filterByCat('personality', this)">人格心理</button>
+          <button class="filter-tab" onclick="filterByCat('knowledge', this)">知识测试</button>
+          <button class="filter-tab" onclick="filterByCat('fun', this)">趣味娱乐</button>
+          <button class="filter-tab" onclick="filterByCat('iq', this)">智力能力</button>
+          <button class="filter-tab" onclick="filterByCat('career', this)">职业发展</button>
         </div>
         <div class="card">
           <table>
@@ -450,6 +327,7 @@
                 <th>测试名称</th>
                 <th>分类</th>
                 <th>题目数</th>
+                <th>预估时间</th>
                 <th>状态</th>
                 <th>访问量</th>
                 <th>操作</th>
@@ -463,73 +341,123 @@
       <!-- Visit Stats -->
       <div id="section-visits" class="section" style="display:none">
         <div class="page-header">
-          <h1>访问统计</h1>
+          <div>
+            <h1>访问统计</h1>
+            <div class="subtitle">用户访问行为分析</div>
+          </div>
         </div>
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="label">今日访问</div>
+            <div class="header">
+              <div class="label">今日访问</div>
+              <div class="icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            </div>
             <div class="value" id="visit-today">0</div>
           </div>
           <div class="stat-card">
-            <div class="label">本周访问</div>
+            <div class="header">
+              <div class="label">本周访问</div>
+              <div class="icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div>
+            </div>
             <div class="value" id="visit-week">0</div>
           </div>
           <div class="stat-card">
-            <div class="label">本月访问</div>
+            <div class="header">
+              <div class="label">本月访问</div>
+              <div class="icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+            </div>
             <div class="value" id="visit-month">0</div>
           </div>
           <div class="stat-card">
-            <div class="label">总访问量</div>
-            <div class="value" id="visit-total">0</div>
+            <div class="header">
+              <div class="label">平均每日</div>
+              <div class="icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg></div>
+            </div>
+            <div class="value" id="visit-avg">0</div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-header">
-            <h3>最近访问记录</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="card">
+            <div class="card-header">
+              <h3>各测试访问量</h3>
+            </div>
+            <div class="card-body">
+              <div class="chart-container">
+                <canvas id="testVisitChart"></canvas>
+              </div>
+            </div>
           </div>
-          <table>
-            <thead>
-              <tr><th>时间</th><th>测试</th><th>结果</th><th>耗时</th></tr>
-            </thead>
-            <tbody id="visit-log"></tbody>
-          </table>
+          <div class="card">
+            <div class="card-header">
+              <h3>最近访问记录</h3>
+            </div>
+            <div class="card-body" style="padding:0;max-height:320px;overflow-y:auto">
+              <table>
+                <thead><tr><th>时间</th><th>测试</th><th>结果</th></tr></thead>
+                <tbody id="visit-log"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
       <!-- Settings -->
       <div id="section-settings" class="section" style="display:none">
         <div class="page-header">
-          <h1>系统设置</h1>
+          <div>
+            <h1>系统设置</h1>
+            <div class="subtitle">配置系统参数和数据管理</div>
+          </div>
         </div>
-        <div class="card" style="padding:24px;max-width:480px">
-          <div class="form-group">
-            <label>导出所有数据</label>
+        <div class="settings-grid">
+          <div class="setting-item">
+            <h4>导出数据</h4>
+            <p>将所有访问数据导出为 JSON 文件，可用于备份或迁移。</p>
             <button class="btn btn-primary" onclick="exportData()">导出 JSON</button>
           </div>
-          <div class="form-group">
-            <label>导入数据</label>
-            <input type="file" id="importFile" accept=".json" onchange="importData(event)">
+          <div class="setting-item">
+            <h4>导入数据</h4>
+            <p>从 JSON 文件导入访问数据，覆盖当前数据。</p>
+            <input type="file" id="importFile" accept=".json" onchange="importData(event)" style="margin-bottom:8px">
           </div>
-          <div class="form-group">
-            <label>清空所有访问记录</label>
-            <button class="btn btn-danger" onclick="clearAllVisits()">清空访问数据</button>
+          <div class="setting-item">
+            <h4>清空访问记录</h4>
+            <p>删除所有访问统计数据和历史记录，此操作不可恢复。</p>
+            <button class="btn btn-danger" onclick="clearAllVisits()">清空数据</button>
+          </div>
+          <div class="setting-item">
+            <h4>修改登录密码</h4>
+            <p>在 Cloudflare Pages 的 Environment variables 中修改 ADMIN_PASSWORD。</p>
+            <a href="https://dash.cloudflare.com" target="_blank" class="btn btn-outline">前往 Cloudflare</a>
+          </div>
+          <div class="setting-item">
+            <h4>访问主站</h4>
+            <p>打开 TestHub 主站查看测试页面。</p>
+            <a href="/" target="_blank" class="btn btn-outline">打开主站</a>
+          </div>
+          <div class="setting-item">
+            <h4>系统信息</h4>
+            <p>TestHub v1.0 · Cloudflare Pages · 26 个测试</p>
+            <div style="font-size:12px;color:var(--text-3);margin-top:8px">
+              KV 存储：统计缓存<br>
+              D1 数据库：访问记录
+            </div>
           </div>
         </div>
       </div>
     </main>
   </div>
 
-  <!-- Edit Question Modal -->
+  <!-- Modal -->
   <div class="modal-overlay" id="questionModal">
     <div class="modal">
       <div class="modal-header">
         <h3 id="modal-title">编辑测试</h3>
-        <button class="modal-close" onclick="closeModal('questionModal')">&times;</button>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
       </div>
       <div class="modal-body" id="modal-body"></div>
       <div class="modal-footer">
-        <button class="btn btn-outline" onclick="closeModal('questionModal')">取消</button>
-        <button class="btn btn-primary" onclick="saveQuestion()">保存</button>
+        <button class="btn btn-outline" onclick="closeModal()">关闭</button>
       </div>
     </div>
   </div>
@@ -542,7 +470,7 @@
   <script src="data/iq.js"></script>
   <script src="data/career.js"></script>
   <script>
-  // ========== Test Registry (same as main page) ==========
+  // ========== Test Registry ==========
   const tests = [
     { id:'mbti', title:'MBTI 16型人格', desc:'了解你的性格类型，覆盖四大维度', cat:'personality', icon:'brain', time:'10 min', count:60, hot:true },
     { id:'enneagram', title:'九型人格', desc:'探索九种人格类型的核心动机与成长', cat:'personality', icon:'crystal', time:'15 min', count:90, hot:true },
@@ -601,26 +529,21 @@
     stress: () => typeof CAREER_DATA !== 'undefined' ? CAREER_DATA.stress : null,
   };
 
-  // ========== Login System ==========
-  const LOGIN_KEY = 'testhub_admin_login';
+  const CAT_LABELS = { personality:'人格心理', knowledge:'知识测试', fun:'趣味娱乐', iq:'智力能力', career:'职业发展' };
+  const CAT_COLORS = { personality:'#2563eb', knowledge:'#16a34a', fun:'#ea580c', iq:'#9333ea', career:'#0891b2' };
 
+  // ========== Login ==========
+  const LOGIN_KEY = 'testhub_admin_login';
   async function handleLogin(e) {
     e.preventDefault();
     const password = document.getElementById('loginPassword').value;
     const errorEl = document.getElementById('loginError');
     const btnEl = document.querySelector('.login-btn');
-
     btnEl.textContent = '验证中...';
     btnEl.disabled = true;
     errorEl.style.display = 'none';
-
     try {
-      // 通过 Pages Function 验证密码（自动部署，无需单独部署 Worker）
-      const resp = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
+      const resp = await fetch('/api/auth', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password}) });
       const data = await resp.json();
       if (data.success) {
         localStorage.setItem(LOGIN_KEY, 'true');
@@ -628,21 +551,18 @@
         document.getElementById('adminLayout').style.display = 'flex';
         initAdmin();
         return;
-      } else {
-        errorEl.textContent = '密码错误，请重试';
-        errorEl.style.display = 'block';
       }
+      errorEl.textContent = '密码错误，请重试';
+      errorEl.style.display = 'block';
     } catch (err) {
-      errorEl.textContent = '连接服务器失败：' + err.message;
+      errorEl.textContent = '连接失败：' + err.message;
       errorEl.style.display = 'block';
     }
-
     btnEl.textContent = '登录';
     btnEl.disabled = false;
     document.getElementById('loginPassword').value = '';
     document.getElementById('loginPassword').focus();
   }
-
   function checkLogin() {
     if (localStorage.getItem(LOGIN_KEY) === 'true') {
       document.getElementById('loginPage').style.display = 'none';
@@ -651,389 +571,276 @@
     }
     return false;
   }
+  function logout() { localStorage.removeItem(LOGIN_KEY); location.reload(); }
 
-  function logout() {
-    localStorage.removeItem(LOGIN_KEY);
-    location.reload();
-  }
-
-  // ========== Data Management ==========
-  const ADMIN_STORAGE_KEY = 'testhub_admin_data';
+  // ========== Data ==========
   const VISIT_LOG_KEY = 'testhub_visit_log';
   const VISIT_STATS_KEY = 'testhub_visit_stats';
-  const API_URL = '';
+  function getVisitLog() { try { return JSON.parse(localStorage.getItem(VISIT_LOG_KEY)) || []; } catch { return []; } }
+  function saveVisitLog(log) { localStorage.setItem(VISIT_LOG_KEY, JSON.stringify(log.slice(-500))); }
+  function getVisitStats() { try { return JSON.parse(localStorage.getItem(VISIT_STATS_KEY)) || {total:0,daily:{},testCounts:{}}; } catch { return {total:0,daily:{},testCounts:{}}; } }
+  function saveVisitStats(s) { localStorage.setItem(VISIT_STATS_KEY, JSON.stringify(s)); }
 
-  // Fetch stats from Pages Functions API (with localStorage fallback)
   async function fetchStats() {
-    try {
-      const resp = await fetch('/api/stats');
-      if (resp.ok) return await resp.json();
-    } catch (e) {}
-    // Fallback to localStorage
-    const stats = getVisitStats();
-    const log = getVisitLog();
-    return {
-      total: stats.total || 0,
-      today: stats.daily[new Date().toISOString().split('T')[0]] || 0,
-      todayTests: {},
-      testCounts: stats.testCounts || {},
-      recentLog: log.slice(0, 20)
-    };
+    try { const r = await fetch('/api/stats'); if (r.ok) return await r.json(); } catch {}
+    const s = getVisitStats(), log = getVisitLog();
+    return { total:s.total||0, today:s.daily[new Date().toISOString().split('T')[0]]||0, todayTests:{}, testCounts:s.testCounts||{}, recentLog:log.slice(0,20) };
   }
 
-  function getAdminData() {
-    try { return JSON.parse(localStorage.getItem(ADMIN_STORAGE_KEY)) || {}; } catch { return {}; }
-  }
-  function saveAdminData(data) {
-    localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(data));
-  }
-  function getVisitLog() {
-    try { return JSON.parse(localStorage.getItem(VISIT_LOG_KEY)) || []; } catch { return []; }
-  }
-  function saveVisitLog(log) {
-    localStorage.setItem(VISIT_LOG_KEY, JSON.stringify(log.slice(-500))); // Keep last 500
-  }
-  function getVisitStats() {
-    try { return JSON.parse(localStorage.getItem(VISIT_STATS_KEY)) || { total: 0, daily: {} }; } catch { return { total: 0, daily: {} }; }
-  }
-  function saveVisitStats(stats) {
-    localStorage.setItem(VISIT_STATS_KEY, JSON.stringify(stats));
-  }
-
-  // Track visit
   function trackVisit(testId, result, duration) {
-    // 本地存储
-    const log = getVisitLog();
-    log.push({ testId, result, duration, time: Date.now() });
-    saveVisitLog(log);
-
-    const stats = getVisitStats();
-    stats.total++;
-    const today = new Date().toISOString().split('T')[0];
-    stats.daily[today] = (stats.daily[today] || 0) + 1;
-    if (!stats.testCounts) stats.testCounts = {};
-    stats.testCounts[testId] = (stats.testCounts[testId] || 0) + 1;
-    saveVisitStats(stats);
-
-    // 发送到 Pages Functions
-    fetch('/api/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ testId, result, duration })
-    }).catch(() => {});
+    const log = getVisitLog(); log.push({testId,result,duration,time:Date.now()}); saveVisitLog(log);
+    const s = getVisitStats(); s.total++; const t=new Date().toISOString().split('T')[0]; s.daily[t]=(s.daily[t]||0)+1;
+    if(!s.testCounts) s.testCounts={}; s.testCounts[testId]=(s.testCounts[testId]||0)+1; saveVisitStats(s);
+    fetch('/api/track',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({testId,result,duration})}).catch(()=>{});
   }
 
-  // ========== Section Navigation ==========
+  // ========== Navigation ==========
+  let currentCat = 'all';
   function showSection(name) {
     document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
     document.getElementById('section-' + name).style.display = 'block';
     document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
-    event.target.closest('a').classList.add('active');
+    document.querySelectorAll('.sidebar-nav a').forEach(a => {
+      if (a.textContent.trim().includes(getSectionLabel(name))) a.classList.add('active');
+    });
     if (name === 'dashboard') refreshData();
     if (name === 'visits') refreshVisits();
     if (name === 'tests') refreshTestsTable();
   }
+  function getSectionLabel(name) {
+    const map = {dashboard:'数据概览',tests:'题库管理',visits:'访问统计',settings:'系统设置'};
+    return map[name] || '';
+  }
 
   // ========== Dashboard ==========
   async function refreshData() {
-    // Count tests and questions
-    let totalTests = 0, totalQuestions = 0;
-    const testList = typeof tests !== 'undefined' ? tests : [];
-    totalTests = testList.length;
-    testList.forEach(t => {
-      const getter = typeof DATA_MAP !== 'undefined' ? DATA_MAP[t.id] : null;
-      if (getter) {
-        const data = getter();
-        if (data && data.questions) totalQuestions += data.questions.length;
-      }
-    });
-    document.getElementById('admin-total-tests').textContent = totalTests;
-    document.getElementById('admin-total-questions').textContent = totalQuestions.toLocaleString();
-
-    // Visit stats (from API or localStorage)
+    let totalQ = 0;
+    tests.forEach(t => { const g = DATA_MAP[t.id]; if(g){const d=g();if(d&&d.questions)totalQ+=d.questions.length;} });
+    document.getElementById('admin-total-tests').textContent = tests.length;
+    document.getElementById('admin-total-questions').textContent = totalQ.toLocaleString();
     const stats = await fetchStats();
     document.getElementById('admin-today-visits').textContent = stats.today || 0;
     document.getElementById('admin-total-visits').textContent = stats.total || 0;
-
-    // Draw visit chart
-    drawVisitChart(stats.testCounts || {});
+    drawTrendChart(stats.weekStats || {});
+    renderCategoryStats(stats.testCounts || {});
   }
 
-  function drawVisitChart(testCounts) {
-    const canvas = document.getElementById('visitChart');
+  function drawTrendChart(weekStats) {
+    const canvas = document.getElementById('trendChart');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const w = canvas.width = canvas.parentElement.clientWidth;
-    const h = canvas.height = 200;
+    const h = canvas.height = 240;
     ctx.clearRect(0, 0, w, h);
 
-    const entries = Object.entries(testCounts || {}).sort((a,b) => b[1] - a[1]).slice(0, 10);
+    const days = Object.entries(weekStats).sort((a,b) => a[0].localeCompare(b[0]));
+    if (days.length === 0) { ctx.fillStyle='#94a3b8';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',w/2,h/2);return; }
 
-    if (entries.length === 0) {
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = '14px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('暂无访问数据', w/2, h/2);
-      return;
-    }
+    const maxVal = Math.max(...days.map(d=>d[1]), 1);
+    const chartW = w - 80, chartH = h - 60;
+    const startX = 60, startY = 30;
+    const barW = Math.min(36, chartW / days.length - 12);
 
-    const maxVal = Math.max(...entries.map(e => e[1]));
-    const barW = Math.min(40, (w - 80) / entries.length - 8);
-    const chartH = h - 50;
-    const startX = 60;
-
-    // Grid
+    // Grid lines
     for (let i = 0; i <= 4; i++) {
-      const y = 20 + chartH * (1 - i/4);
-      ctx.strokeStyle = '#e2e8f0';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(startX, y);
-      ctx.lineTo(w - 20, y);
-      ctx.stroke();
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = '11px sans-serif';
-      ctx.textAlign = 'right';
-      ctx.fillText(Math.round(maxVal * i/4), startX - 8, y + 4);
+      const y = startY + chartH * (1 - i/4);
+      ctx.strokeStyle = '#f1f5f9'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(startX, y); ctx.lineTo(w - 20, y); ctx.stroke();
+      ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText(Math.round(maxVal * i/4), startX - 10, y + 4);
     }
 
     // Bars
-    const gap = (w - startX - 40) / entries.length;
-    const colors = ['#2563eb','#7c3aed','#db2777','#ea580c','#16a34a','#0891b2','#4f46e5','#c026d3','#d97706','#059669'];
-    entries.forEach(([id, count], i) => {
+    const gap = chartW / days.length;
+    days.forEach(([date, count], i) => {
       const x = startX + i * gap + (gap - barW) / 2;
       const barH = (count / maxVal) * chartH;
-      const y = 20 + chartH - barH;
-
-      ctx.fillStyle = colors[i % colors.length];
-      ctx.beginPath();
-      ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
-      ctx.fill();
-
+      const y = startY + chartH - barH;
+      const gradient = ctx.createLinearGradient(x, y, x, y + barH);
+      gradient.addColorStop(0, '#3b82f6');
+      gradient.addColorStop(1, '#2563eb');
+      ctx.fillStyle = gradient;
+      ctx.beginPath(); ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]); ctx.fill();
       // Label
-      ctx.fillStyle = '#64748b';
-      ctx.font = '10px sans-serif';
-      ctx.textAlign = 'center';
-      const test = tests.find(t => t.id === id);
-      const label = test ? (test.title.length > 6 ? test.title.substring(0,6) + '..' : test.title) : id;
-      ctx.fillText(label, x + barW/2, h - 5);
-
+      const d = new Date(date);
+      ctx.fillStyle = '#94a3b8'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText((d.getMonth()+1)+'/'+d.getDate(), x + barW/2, h - 8);
       // Value
-      ctx.fillStyle = '#0f172a';
-      ctx.font = '600 11px sans-serif';
-      ctx.fillText(count, x + barW/2, y - 6);
+      if (count > 0) { ctx.fillStyle = '#0f172a'; ctx.font = '600 11px sans-serif'; ctx.fillText(count, x + barW/2, y - 8); }
     });
   }
 
+  function renderCategoryStats(testCounts) {
+    const el = document.getElementById('categoryStats');
+    const catCounts = {};
+    tests.forEach(t => {
+      if (!catCounts[t.cat]) catCounts[t.cat] = { count: 0, visits: 0 };
+      catCounts[t.cat].count++;
+      catCounts[t.cat].visits += (testCounts[t.id] || 0);
+    });
+    el.innerHTML = Object.entries(catCounts).map(([cat, data]) => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;background:${CAT_COLORS[cat]}"></div>
+          <span style="font-size:13px;font-weight:500">${CAT_LABELS[cat]}</span>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:14px;font-weight:600">${data.count} 个测试</div>
+          <div style="font-size:12px;color:var(--text-3)">${data.visits} 次访问</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
   // ========== Test Management ==========
+  let testFilter = 'all';
+  function filterByCat(cat, btn) {
+    testFilter = cat;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    refreshTestsTable();
+  }
+  function filterTests() { refreshTestsTable(); }
+
   function refreshTestsTable() {
-    const testList = typeof tests !== 'undefined' ? tests : [];
+    const search = (document.getElementById('testSearch')?.value || '').toLowerCase();
+    const filtered = tests.filter(t => {
+      if (testFilter !== 'all' && t.cat !== testFilter) return false;
+      if (search && !t.title.toLowerCase().includes(search) && !t.desc.toLowerCase().includes(search)) return false;
+      return true;
+    });
     const stats = getVisitStats();
-    const tbody = document.getElementById('tests-table');
-    tbody.innerHTML = testList.map(t => {
-      const getter = typeof DATA_MAP !== 'undefined' ? DATA_MAP[t.id] : null;
-      let qCount = 0;
-      if (getter) {
-        const data = getter();
-        if (data && data.questions) qCount = data.questions.length;
-      }
-      const visits = (stats.testCounts || {})[t.id] || 0;
-      const catLabels = { personality:'人格心理', knowledge:'知识测试', fun:'趣味娱乐', iq:'智力能力', career:'职业发展' };
+    document.getElementById('tests-table').innerHTML = filtered.map(t => {
+      let qCount = 0; const g = DATA_MAP[t.id]; if(g){const d=g();if(d&&d.questions)qCount=d.questions.length;}
+      const visits = (stats.testCounts||{})[t.id] || 0;
       return `<tr>
-        <td><strong>${t.title}</strong><br><span style="color:var(--text-3);font-size:12px">${t.desc}</span></td>
-        <td><span class="badge badge-info">${catLabels[t.cat] || t.cat}</span></td>
+        <td><strong>${t.title}</strong><div style="font-size:12px;color:var(--text-3);margin-top:2px">${t.desc}</div></td>
+        <td><span class="badge badge-info">${CAT_LABELS[t.cat]}</span></td>
         <td>${qCount}</td>
+        <td>${t.time}</td>
         <td><span class="badge badge-success">已上线</span></td>
         <td>${visits}</td>
         <td>
           <button class="btn btn-sm btn-outline" onclick="viewTest('${t.id}')">查看</button>
-          <button class="btn btn-sm btn-outline" onclick="editTest('${t.id}')">编辑</button>
+          <button class="btn btn-sm btn-outline" onclick="editTest('${t.id}')">详情</button>
         </td>
       </tr>`;
-    }).join('');
+    }).join('') || '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-3)">暂无匹配的测试</td></tr>';
   }
 
-  function viewTest(testId) {
-    window.open('index.html#quiz/' + testId, '_blank');
-  }
-
-  function editTest(testId) {
-    const getter = typeof DATA_MAP !== 'undefined' ? DATA_MAP[testId] : null;
-    if (!getter) { alert('无法加载该测试数据'); return; }
-    const data = getter();
-    if (!data || !data.questions) { alert('测试数据为空'); return; }
-
-    const test = tests.find(t => t.id === testId);
-    let html = `
-      <div class="form-group">
-        <label>测试名称</label>
-        <input type="text" id="edit-title" value="${data.title}">
-      </div>
-      <div class="form-group">
-        <label>题目数量：${data.questions.length} 题</label>
-      </div>
-      <div style="max-height:400px;overflow-y:auto">
-    `;
-
-    data.questions.slice(0, 20).forEach((q, i) => {
-      html += `
-        <div class="question-item">
-          <div class="q-header">
-            <span class="q-num">Q${i+1}</span>
-          </div>
-          <div style="font-size:13px;margin-bottom:8px;color:var(--text-2)">${q.text}</div>
-          <div style="font-size:12px;color:var(--text-3)">
-            ${q.options.map((o, j) => `<div>${j+1}. ${o.text} ${o.correct ? '✓' : ''}</div>`).join('')}
-          </div>
-        </div>
-      `;
+  function viewTest(id) { window.open('/?test=' + id, '_blank'); }
+  function editTest(id) {
+    const g = DATA_MAP[id]; if(!g) return;
+    const data = g(); if(!data||!data.questions) return;
+    const t = tests.find(x => x.id === id);
+    let html = `<div style="margin-bottom:16px"><strong>${data.title}</strong> · ${data.questions.length} 题</div>`;
+    html += '<div style="max-height:400px;overflow-y:auto">';
+    data.questions.slice(0, 15).forEach((q, i) => {
+      html += `<div style="padding:12px;background:#f8fafc;border-radius:8px;margin-bottom:8px">
+        <div style="font-weight:600;font-size:13px;margin-bottom:6px">Q${i+1}. ${q.text}</div>
+        <div style="font-size:12px;color:var(--text-3)">${q.options.map((o,j) => `<div>${j+1}. ${o.text} ${o.correct||o.scores?'':''}</div>`).join('')}</div>
+      </div>`;
     });
-
-    if (data.questions.length > 20) {
-      html += `<div style="text-align:center;padding:12px;color:var(--text-3);font-size:13px">... 还有 ${data.questions.length - 20} 题</div>`;
-    }
-
+    if (data.questions.length > 15) html += `<div style="text-align:center;padding:12px;color:var(--text-3);font-size:13px">... 还有 ${data.questions.length - 15} 题</div>`;
     html += '</div>';
-    document.getElementById('modal-title').textContent = '编辑: ' + data.title;
+    document.getElementById('modal-title').textContent = '测试详情';
     document.getElementById('modal-body').innerHTML = html;
     document.getElementById('questionModal').classList.add('active');
   }
-
   function showAddTestModal() {
     document.getElementById('modal-title').textContent = '新增测试';
     document.getElementById('modal-body').innerHTML = `
-      <div class="form-group">
-        <label>测试名称</label>
-        <input type="text" id="new-test-title" placeholder="输入测试名称">
-      </div>
-      <div class="form-group">
-        <label>测试分类</label>
-        <select id="new-test-cat">
-          <option value="personality">人格心理</option>
-          <option value="knowledge">知识测试</option>
-          <option value="fun">趣味娱乐</option>
-          <option value="iq">智力能力</option>
-          <option value="career">职业发展</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>测试描述</label>
-        <textarea id="new-test-desc" placeholder="简短描述测试内容"></textarea>
-      </div>
-      <p style="font-size:13px;color:var(--text-3);margin-top:12px">
-        提示：新增测试需要在代码中添加题库数据文件。此表单仅用于在管理界面注册测试信息。
-      </p>
-    `;
+      <div class="form-group"><label>测试名称</label><input type="text" placeholder="输入测试名称"></div>
+      <div class="form-group"><label>测试分类</label><select><option>人格心理</option><option>知识测试</option><option>趣味娱乐</option><option>智力能力</option><option>职业发展</option></select></div>
+      <div class="form-group"><label>测试描述</label><textarea placeholder="简短描述测试内容"></textarea></div>
+      <p style="font-size:13px;color:var(--text-3);margin-top:8px">提示：新增测试需要在代码中添加题库数据文件。</p>`;
     document.getElementById('questionModal').classList.add('active');
   }
-
-  function saveQuestion() {
-    closeModal('questionModal');
-    alert('保存成功！');
-  }
+  function closeModal() { document.getElementById('questionModal').classList.remove('active'); }
 
   // ========== Visit Stats ==========
   async function refreshVisits() {
     const stats = await fetchStats();
     const log = stats.recentLog || [];
-
     document.getElementById('visit-today').textContent = stats.today || 0;
     document.getElementById('visit-total').textContent = stats.total || 0;
-
-    // Calculate week/month from log
     const now = Date.now();
-    const weekAgo = now - 7 * 86400000;
-    const monthAgo = now - 30 * 86400000;
-    const weekVisits = log.filter(l => l.time > weekAgo).length;
-    const monthVisits = log.filter(l => l.time > monthAgo).length;
-    document.getElementById('visit-week').textContent = weekVisits;
-    document.getElementById('visit-month').textContent = monthVisits;
+    const week = log.filter(l => l.time > now - 7*86400000).length;
+    const month = log.filter(l => l.time > now - 30*86400000).length;
+    document.getElementById('visit-week').textContent = week;
+    document.getElementById('visit-month').textContent = month;
+    document.getElementById('visit-avg').textContent = month > 0 ? Math.round(month / 30) : 0;
+    document.getElementById('visit-log').innerHTML = log.map(l => {
+      const t = tests.find(x => x.id === l.testId);
+      return `<tr><td style="font-size:12px;color:var(--text-3)">${new Date(l.time).toLocaleString('zh-CN')}</td><td>${t?t.title:l.testId}</td><td>${l.result||'-'}</td></tr>`;
+    }).join('') || '<tr><td colspan="3" style="text-align:center;padding:24px;color:var(--text-3)">暂无记录</td></tr>';
+    drawTestVisitChart(stats.testCounts || {});
+  }
 
-    // Visit log table
-    const tbody = document.getElementById('visit-log');
-    tbody.innerHTML = log.map(l => {
-      const test = typeof tests !== 'undefined' ? tests.find(t => t.id === l.testId) : null;
-      const time = new Date(l.time).toLocaleString('zh-CN');
-      return `<tr>
-        <td style="font-size:12px;color:var(--text-3)">${time}</td>
-        <td>${test ? test.title : l.testId}</td>
-        <td>${l.result || '-'}</td>
-        <td>${l.duration ? Math.round(l.duration/1000) + 's' : '-'}</td>
-      </tr>`;
-    }).join('') || '<tr><td colspan="4" style="text-align:center;color:var(--text-3);padding:24px">暂无访问记录</td></tr>';
+  function drawTestVisitChart(testCounts) {
+    const canvas = document.getElementById('testVisitChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width = canvas.parentElement.clientWidth;
+    const h = canvas.height = 260;
+    ctx.clearRect(0, 0, w, h);
+    const entries = Object.entries(testCounts).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    if (!entries.length) { ctx.fillStyle='#94a3b8';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText('暂无数据',w/2,h/2);return; }
+    const maxVal = Math.max(...entries.map(e=>e[1]));
+    const barH = Math.min(24, (h-40)/entries.length-8);
+    const gap = (h-40) / entries.length;
+    const maxLabelW = 80;
+    entries.forEach(([id, count], i) => {
+      const y = 20 + i * gap;
+      const t = tests.find(x=>x.id===id);
+      const label = t ? (t.title.length>8 ? t.title.substring(0,8)+'..' : t.title) : id;
+      ctx.fillStyle = '#64748b'; ctx.font = '12px sans-serif'; ctx.textAlign = 'right';
+      ctx.fillText(label, maxLabelW - 8, y + barH/2 + 4);
+      const barW = (w - maxLabelW - 60) * (count / maxVal);
+      const gradient = ctx.createLinearGradient(maxLabelW, 0, maxLabelW + barW, 0);
+      gradient.addColorStop(0, CAT_COLORS[t?.cat] || '#3b82f6');
+      gradient.addColorStop(1, (CAT_COLORS[t?.cat] || '#3b82f6') + '88');
+      ctx.fillStyle = gradient;
+      ctx.beginPath(); ctx.roundRect(maxLabelW, y, barW, barH, [0, 4, 4, 0]); ctx.fill();
+      ctx.fillStyle = '#0f172a'; ctx.font = '600 11px sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(count, maxLabelW + barW + 8, y + barH/2 + 4);
+    });
   }
 
   // ========== Settings ==========
   function exportData() {
-    const data = {
-      visitLog: getVisitLog(),
-      visitStats: getVisitStats(),
-      adminData: getAdminData(),
-      exportTime: new Date().toISOString()
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const data = { visitLog:getVisitLog(), visitStats:getVisitStats(), exportTime:new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'testhub-backup-' + new Date().toISOString().split('T')[0] + '.json';
-    a.click();
+    const a = document.createElement('a'); a.href=url; a.download='testhub-backup-'+new Date().toISOString().split('T')[0]+'.json'; a.click();
     URL.revokeObjectURL(url);
   }
-
   function importData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
+    const file = event.target.files[0]; if(!file) return;
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = e => {
       try {
         const data = JSON.parse(e.target.result);
-        if (data.visitLog) saveVisitLog(data.visitLog);
-        if (data.visitStats) saveVisitStats(data.visitStats);
-        if (data.adminData) saveAdminData(data.adminData);
-        alert('导入成功！');
-        refreshData();
-      } catch (err) {
-        alert('导入失败：' + err.message);
-      }
+        if(data.visitLog) saveVisitLog(data.visitLog);
+        if(data.visitStats) saveVisitStats(data.visitStats);
+        alert('导入成功！'); refreshData();
+      } catch(err) { alert('导入失败：'+err.message); }
     };
     reader.readAsText(file);
   }
-
   function clearAllVisits() {
-    if (confirm('确定要清空所有访问数据吗？此操作不可恢复。')) {
-      localStorage.removeItem(VISIT_LOG_KEY);
-      localStorage.removeItem(VISIT_STATS_KEY);
-      refreshData();
-      alert('已清空');
+    if(confirm('确定要清空所有访问数据吗？此操作不可恢复。')) {
+      localStorage.removeItem(VISIT_LOG_KEY); localStorage.removeItem(VISIT_STATS_KEY);
+      fetch('/api/history',{method:'DELETE'}).catch(()=>{});
+      refreshData(); alert('已清空');
     }
-  }
-
-  function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
   }
 
   // ========== Init ==========
-  async function initAdmin() {
-    await refreshData();
-    // Track this page visit
-    trackVisit('admin', 'admin_panel', 0);
-  }
-
-  // Auto-init when page loads
+  async function initAdmin() { await refreshData(); trackVisit('admin','admin_panel',0); }
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      if (!checkLogin()) {
-        // Show login page
-        document.getElementById('loginPage').style.display = 'flex';
-        document.getElementById('adminLayout').style.display = 'none';
-      }
-    });
-  } else {
-    if (!checkLogin()) {
-      document.getElementById('loginPage').style.display = 'flex';
-      document.getElementById('adminLayout').style.display = 'none';
-    }
-  }
+    document.addEventListener('DOMContentLoaded', () => { if(!checkLogin()) { document.getElementById('loginPage').style.display='flex'; document.getElementById('adminLayout').style.display='none'; } });
+  } else { if(!checkLogin()) { document.getElementById('loginPage').style.display='flex'; document.getElementById('adminLayout').style.display='none'; } }
   </script>
 </body>
 </html>
