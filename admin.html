@@ -456,7 +456,7 @@
         <button class="modal-close" onclick="closeModal()">&times;</button>
       </div>
       <div class="modal-body" id="modal-body"></div>
-      <div class="modal-footer">
+      <div class="modal-footer" id="modal-footer">
         <button class="btn btn-outline" onclick="closeModal()">关闭</button>
       </div>
     </div>
@@ -728,34 +728,173 @@
     }).join('') || '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-3)">暂无匹配的测试</td></tr>';
   }
 
-  function viewTest(id) { window.open('/?test=' + id, '_blank'); }
+  function viewTest(id) {
+    const g = DATA_MAP[id]; if(!g) return;
+    const data = g(); if(!data||!data.questions) return;
+    const t = tests.find(x => x.id === id);
+    let html = `
+      <div style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <span class="badge badge-info">${CAT_LABELS[t.cat]}</span>
+          <span style="font-size:12px;color:var(--text-3)">${t.time}</span>
+        </div>
+        <h4 style="font-size:18px;margin-bottom:4px">${data.title}</h4>
+        <p style="font-size:13px;color:var(--text-3)">${t.desc}</p>
+        <div style="margin-top:12px;display:flex;gap:16px;font-size:13px">
+          <span>题目数：<strong>${data.questions.length}</strong></span>
+          <span>类型：<strong>${data.results ? Object.keys(data.results).length + ' 种结果' : data.scoreType === 'correct' ? '计分制' : '多类型'}</strong></span>
+        </div>
+      </div>
+      <div style="max-height:400px;overflow-y:auto">
+        ${data.questions.slice(0, 5).map((q, i) => `
+          <div style="padding:12px;background:#f8fafc;border-radius:8px;margin-bottom:8px">
+            <div style="font-weight:600;font-size:13px;margin-bottom:6px">Q${i+1}. ${q.text}</div>
+            <div style="font-size:12px;color:var(--text-3)">${q.options.map((o,j) => `<div style="margin-bottom:2px">${j+1}. ${o.text}</div>`).join('')}</div>
+          </div>
+        `).join('')}
+        ${data.questions.length > 5 ? `<div style="text-align:center;padding:12px;color:var(--text-3);font-size:13px">显示前 5 题，共 ${data.questions.length} 题</div>` : ''}
+      </div>
+    `;
+    document.getElementById('modal-title').textContent = '测试预览';
+    document.getElementById('modal-body').innerHTML = html;
+    document.getElementById('questionModal').classList.add('active');
+  }
+
   function editTest(id) {
     const g = DATA_MAP[id]; if(!g) return;
     const data = g(); if(!data||!data.questions) return;
     const t = tests.find(x => x.id === id);
-    let html = `<div style="margin-bottom:16px"><strong>${data.title}</strong> · ${data.questions.length} 题</div>`;
-    html += '<div style="max-height:400px;overflow-y:auto">';
-    data.questions.slice(0, 15).forEach((q, i) => {
-      html += `<div style="padding:12px;background:#f8fafc;border-radius:8px;margin-bottom:8px">
-        <div style="font-weight:600;font-size:13px;margin-bottom:6px">Q${i+1}. ${q.text}</div>
-        <div style="font-size:12px;color:var(--text-3)">${q.options.map((o,j) => `<div>${j+1}. ${o.text} ${o.correct||o.scores?'':''}</div>`).join('')}</div>
-      </div>`;
-    });
-    if (data.questions.length > 15) html += `<div style="text-align:center;padding:12px;color:var(--text-3);font-size:13px">... 还有 ${data.questions.length - 15} 题</div>`;
-    html += '</div>';
-    document.getElementById('modal-title').textContent = '测试详情';
+
+    let html = `
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span class="badge badge-info">${CAT_LABELS[t.cat]}</span>
+          <span style="font-size:12px;color:var(--text-3)">${t.time}</span>
+        </div>
+        <h4 style="font-size:18px;margin-bottom:4px">${data.title}</h4>
+        <p style="font-size:13px;color:var(--text-3)">${t.desc}</p>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:16px;font-size:13px;padding:12px;background:#f8fafc;border-radius:8px">
+        <div>题目数：<strong>${data.questions.length}</strong></div>
+        <div>结果类型：<strong>${data.results ? Object.keys(data.results).length : '-'}</strong></div>
+        <div>状态：<span class="badge badge-success" style="margin-left:4px">已上线</span></div>
+      </div>
+    `;
+
+    // Show all questions with pagination
+    const pageSize = 10;
+    const totalPages = Math.ceil(data.questions.length / pageSize);
+    let currentPage = 1;
+
+    function renderQuestionPage(page) {
+      const start = (page - 1) * pageSize;
+      const end = Math.min(start + pageSize, data.questions.length);
+      let qHtml = '<div id="questions-list">';
+      data.questions.slice(start, end).forEach((q, i) => {
+        qHtml += `<div style="padding:14px;background:#f8fafc;border-radius:8px;margin-bottom:8px;border:1px solid var(--border)">
+          <div style="font-weight:600;font-size:13px;margin-bottom:8px;color:var(--text)">Q${start + i + 1}. ${q.text}</div>
+          <div style="font-size:12px;color:var(--text-2);line-height:1.8">
+            ${q.options.map((o,j) => `<div style="padding:4px 0;${o.correct || (o.scores && Object.keys(o.scores).length > 0) ? 'color:var(--success);font-weight:500' : ''}">${String.fromCharCode(65+j)}. ${o.text} ${o.correct ? '✓' : ''}</div>`).join('')}
+          </div>
+        </div>`;
+      });
+      qHtml += '</div>';
+
+      // Pagination
+      if (totalPages > 1) {
+        qHtml += `<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px">
+          <button class="btn btn-sm btn-outline" onclick="goQuestionPage(${page - 1})" ${page <= 1 ? 'disabled style="opacity:0.5"' : ''}>上一页</button>
+          <span style="font-size:13px;color:var(--text-3)">${page} / ${totalPages}</span>
+          <button class="btn btn-sm btn-outline" onclick="goQuestionPage(${page + 1})" ${page >= totalPages ? 'disabled style="opacity:0.5"' : ''}>下一页</button>
+        </div>`;
+      }
+
+      return qHtml;
+    }
+
+    window._editTestData = data;
+    window._editCurrentPage = 1;
+    window._editTotalPages = totalPages;
+
+    html += `<div style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:12px">
+      ${renderQuestionPage(1)}
+    </div>`;
+
+    document.getElementById('modal-title').textContent = '测试详情 - ' + data.title;
     document.getElementById('modal-body').innerHTML = html;
     document.getElementById('questionModal').classList.add('active');
   }
+
+  window.goQuestionPage = function(page) {
+    const data = window._editTestData;
+    const totalPages = window._editTotalPages;
+    if (page < 1 || page > totalPages) return;
+    window._editCurrentPage = page;
+
+    const pageSize = 10;
+    const start = (page - 1) * pageSize;
+    const end = Math.min(start + pageSize, data.questions.length);
+
+    let qHtml = '';
+    data.questions.slice(start, end).forEach((q, i) => {
+      qHtml += `<div style="padding:14px;background:#f8fafc;border-radius:8px;margin-bottom:8px;border:1px solid var(--border)">
+        <div style="font-weight:600;font-size:13px;margin-bottom:8px;color:var(--text)">Q${start + i + 1}. ${q.text}</div>
+        <div style="font-size:12px;color:var(--text-2);line-height:1.8">
+          ${q.options.map((o,j) => `<div style="padding:4px 0;${o.correct || (o.scores && Object.keys(o.scores).length > 0) ? 'color:var(--success);font-weight:500' : ''}">${String.fromCharCode(65+j)}. ${o.text} ${o.correct ? '✓' : ''}</div>`).join('')}
+        </div>
+      </div>`;
+    });
+
+    let paginationHtml = `<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px">
+      <button class="btn btn-sm btn-outline" onclick="goQuestionPage(${page - 1})" ${page <= 1 ? 'disabled style="opacity:0.5"' : ''}>上一页</button>
+      <span style="font-size:13px;color:var(--text-3)">${page} / ${totalPages}</span>
+      <button class="btn btn-sm btn-outline" onclick="goQuestionPage(${page + 1})" ${page >= totalPages ? 'disabled style="opacity:0.5"' : ''}>下一页</button>
+    </div>`;
+
+    const container = document.querySelector('#modal-body > div:last-child');
+    if (container) container.innerHTML = qHtml + paginationHtml;
+  };
+
   function showAddTestModal() {
     document.getElementById('modal-title').textContent = '新增测试';
     document.getElementById('modal-body').innerHTML = `
-      <div class="form-group"><label>测试名称</label><input type="text" placeholder="输入测试名称"></div>
-      <div class="form-group"><label>测试分类</label><select><option>人格心理</option><option>知识测试</option><option>趣味娱乐</option><option>智力能力</option><option>职业发展</option></select></div>
-      <div class="form-group"><label>测试描述</label><textarea placeholder="简短描述测试内容"></textarea></div>
-      <p style="font-size:13px;color:var(--text-3);margin-top:8px">提示：新增测试需要在代码中添加题库数据文件。</p>`;
+      <div style="text-align:center;padding:40px 20px;color:var(--text-3)">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:16px;opacity:0.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        <p style="font-size:14px;margin-bottom:8px">新增测试需要在代码中添加题库数据文件</p>
+        <p style="font-size:12px">请联系开发团队在 data/ 目录下添加新的 JS 文件</p>
+      </div>`;
+    document.getElementById('modal-footer').innerHTML = `
+      <button class="btn btn-outline" onclick="closeModal()">关闭</button>
+    `;
     document.getElementById('questionModal').classList.add('active');
   }
+
+  window._importData = null;
+  window.handleImportFile = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.questions && Array.isArray(data.questions)) {
+          window._importData = data;
+          document.getElementById('importPreview').style.display = 'block';
+          document.getElementById('importInfo').innerHTML = `
+            题目数量：<strong>${data.questions.length}</strong> 题<br>
+            结果类型：<strong>${data.results ? Object.keys(data.results).length + ' 种' : '无'}</strong><br>
+            <span style="color:#16a34a">✓ 格式正确，可以导入</span>
+          `;
+        } else {
+          alert('JSON 格式不正确，需要包含 questions 数组');
+        }
+      } catch (err) {
+        alert('JSON 解析失败：' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  };
+
   function closeModal() { document.getElementById('questionModal').classList.remove('active'); }
 
   // ========== Visit Stats ==========
@@ -837,7 +976,10 @@
   }
 
   // ========== Init ==========
-  async function initAdmin() { await refreshData(); trackVisit('admin','admin_panel',0); }
+  async function initAdmin() {
+    await refreshData();
+    trackVisit('admin', 'admin_panel', 0);
+  }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => { if(!checkLogin()) { document.getElementById('loginPage').style.display='flex'; document.getElementById('adminLayout').style.display='none'; } });
   } else { if(!checkLogin()) { document.getElementById('loginPage').style.display='flex'; document.getElementById('adminLayout').style.display='none'; } }
