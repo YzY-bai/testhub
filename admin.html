@@ -858,16 +858,178 @@
   function showAddTestModal() {
     document.getElementById('modal-title').textContent = '新增测试';
     document.getElementById('modal-body').innerHTML = `
-      <div style="text-align:center;padding:40px 20px;color:var(--text-3)">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:16px;opacity:0.3"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        <p style="font-size:14px;margin-bottom:8px">新增测试需要在代码中添加题库数据文件</p>
-        <p style="font-size:12px">请联系开发团队在 data/ 目录下添加新的 JS 文件</p>
-      </div>`;
+      <div class="form-group">
+        <label>测试名称 *</label>
+        <input type="text" id="newTestTitle" placeholder="例如：性格色彩测试">
+      </div>
+      <div class="form-group">
+        <label>测试分类 *</label>
+        <select id="newTestCat">
+          <option value="personality">人格心理</option>
+          <option value="knowledge">知识测试</option>
+          <option value="fun">趣味娱乐</option>
+          <option value="iq">智力能力</option>
+          <option value="career">职业发展</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>测试描述</label>
+        <textarea id="newTestDesc" placeholder="简短描述测试内容"></textarea>
+      </div>
+      <div class="form-group">
+        <label>上传题库 JSON 文件 *</label>
+        <p style="font-size:12px;color:var(--text-3);margin-bottom:8px">上传包含题目的 JSON 文件</p>
+        <input type="file" id="newTestFile" accept=".json" onchange="handleFileUpload(event)">
+        <div id="uploadStatus" style="margin-top:8px;font-size:12px"></div>
+      </div>
+      <div id="uploadPreview" style="display:none;margin-top:12px;padding:16px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
+        <div style="font-size:13px;font-weight:600;color:#16a34a;margin-bottom:8px">预览</div>
+        <div id="previewInfo" style="font-size:13px;color:var(--text-2)"></div>
+      </div>
+      <details style="margin-top:16px">
+        <summary style="font-size:12px;color:var(--text-3);cursor:pointer">JSON 格式说明</summary>
+        <pre style="margin-top:8px;padding:12px;background:#f8fafc;border-radius:8px;font-size:11px;overflow-x:auto;color:var(--text-2);max-height:200px">{
+  "title": "测试名称",
+  "questions": [
+    {
+      "text": "问题内容？",
+      "options": [
+        { "text": "选项A" },
+        { "text": "选项B", "correct": true }
+      ]
+    }
+  ],
+  "results": {
+    "A": {
+      "title": "结果A",
+      "desc": "描述文字",
+      "traits": ["特质1", "特质2"]
+    }
+  }
+}</pre>
+      </details>`;
     document.getElementById('modal-footer').innerHTML = `
-      <button class="btn btn-outline" onclick="closeModal()">关闭</button>
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" id="saveTestBtn" onclick="saveTest()" disabled>保存测试</button>
     `;
     document.getElementById('questionModal').classList.add('active');
   }
+
+  window._uploadData = null;
+  window.handleFileUpload = function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const statusEl = document.getElementById('uploadStatus');
+    statusEl.innerHTML = '<span style="color:var(--text-3)">读取文件中...</span>';
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+
+        // Validate structure
+        if (!data.questions || !Array.isArray(data.questions)) {
+          statusEl.innerHTML = '<span style="color:var(--danger)">错误：JSON 必须包含 questions 数组</span>';
+          return;
+        }
+        if (data.questions.length === 0) {
+          statusEl.innerHTML = '<span style="color:var(--danger)">错误：questions 数组为空</span>';
+          return;
+        }
+
+        // Validate each question
+        let valid = true;
+        let invalidMsg = '';
+        for (let i = 0; i < data.questions.length; i++) {
+          const q = data.questions[i];
+          if (!q.text || !q.options || !Array.isArray(q.options) || q.options.length < 2) {
+            valid = false;
+            invalidMsg = `第 ${i + 1} 题格式错误：需要 text 和至少 2 个 options`;
+            break;
+          }
+        }
+
+        if (!valid) {
+          statusEl.innerHTML = `<span style="color:var(--danger)">错误：${invalidMsg}</span>`;
+          return;
+        }
+
+        // Success
+        window._uploadData = data;
+        statusEl.innerHTML = `<span style="color:var(--success)">✓ 文件读取成功</span>`;
+        document.getElementById('uploadPreview').style.display = 'block';
+
+        const resultCount = data.results ? Object.keys(data.results).length : 0;
+        document.getElementById('previewInfo').innerHTML = `
+          题目数量：<strong>${data.questions.length}</strong> 题<br>
+          ${resultCount > 0 ? `结果类型：<strong>${resultCount}</strong> 种<br>` : ''}
+          <span style="color:var(--success)">格式正确，可以保存</span>
+        `;
+
+        document.getElementById('saveTestBtn').disabled = false;
+      } catch (err) {
+        statusEl.innerHTML = `<span style="color:var(--danger)">错误：JSON 解析失败 - ${err.message}</span>`;
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  window.saveTest = async function() {
+    const title = document.getElementById('newTestTitle').value.trim();
+    const cat = document.getElementById('newTestCat').value;
+    const desc = document.getElementById('newTestDesc').value.trim();
+    const data = window._uploadData;
+
+    if (!title) { alert('请输入测试名称'); return; }
+    if (!data) { alert('请先上传题库文件'); return; }
+
+    const id = 'custom_' + Date.now();
+    const testPayload = {
+      id,
+      title,
+      desc: desc || title,
+      cat,
+      icon: 'star',
+      time: Math.ceil(data.questions.length * 0.5) + ' min',
+      count: data.questions.length,
+      questions: data.questions,
+      results: data.results || null,
+      scoreType: data.scoreType || null
+    };
+
+    const btn = document.getElementById('saveTestBtn');
+    btn.textContent = '保存中...';
+    btn.disabled = true;
+
+    try {
+      const resp = await fetch('/api/tests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(testPayload)
+      });
+      const result = await resp.json();
+
+      if (result.success) {
+        // Add to local tests array
+        tests.push(result.test);
+        DATA_MAP[result.test.id] = () => testPayload;
+
+        refreshTestsTable();
+        refreshData();
+        closeModal();
+        alert('测试 "' + title + '" 已保存成功！共 ' + data.questions.length + ' 道题目。');
+      } else {
+        alert('保存失败：' + (result.error || '未知错误'));
+        btn.textContent = '保存测试';
+        btn.disabled = false;
+      }
+    } catch (err) {
+      alert('保存失败：' + err.message);
+      btn.textContent = '保存测试';
+      btn.disabled = false;
+    }
+  };
 
   window._importData = null;
   window.handleImportFile = function(event) {
@@ -977,6 +1139,27 @@
 
   // ========== Init ==========
   async function initAdmin() {
+    // Load custom tests from API
+    try {
+      const resp = await fetch('/api/tests');
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.custom && data.custom.length > 0) {
+          data.custom.forEach(t => {
+            if (!tests.find(x => x.id === t.id)) {
+              tests.push(t);
+              // Load test data on demand
+              DATA_MAP[t.id] = async () => {
+                const r = await fetch(`/api/test?id=${t.id}`);
+                if (r.ok) return await r.json();
+                return null;
+              };
+            }
+          });
+        }
+      }
+    } catch (e) {}
+
     await refreshData();
     trackVisit('admin', 'admin_panel', 0);
   }

@@ -1695,10 +1695,21 @@ let qIdx = 0;
 let answers = [];  // 存储每题的选择索引
 let picked = false;
 
-function startQuiz(testId) {
+async function startQuiz(testId) {
   const getter = DATA_MAP[testId];
   if (!getter) { alert('该测试题库正在建设中，敬请期待！'); return; }
-  quizData = getter();
+
+  // Handle async data loading (for custom tests stored in KV)
+  if (getter.constructor.name === 'AsyncFunction' || (getter.constructor.name === 'Function' && getter.toString().includes('fetch'))) {
+    try {
+      quizData = await getter();
+    } catch (e) {
+      quizData = getter();
+    }
+  } else {
+    quizData = getter();
+  }
+
   if (!quizData || !quizData.questions || quizData.questions.length === 0) { alert('题库加载失败，请刷新重试。'); return; }
   currentTestId = testId;
   qIdx = 0;
@@ -1768,7 +1779,26 @@ function calcScores() {
   if (type === 'disc' || type === 'attachment' || type === 'temperament') return calcTypeScore();
   if (type === 'eq') return calcTypeScore();
   if (type === 'values' || type === 'leadership' || type === 'learning' || type === 'stress') return calcTypeScore();
-  return { key: 'unknown', label: '测试完成' };
+  // Custom tests: check if has results with traits
+  if (quizData.results && Object.keys(quizData.results).length > 0) return calcCustomResult();
+  return calcKnowledge(); // Default to knowledge scoring
+}
+
+// Custom test result (for uploaded tests with results)
+function calcCustomResult() {
+  // If test has correct answers, use knowledge scoring
+  if (quizData.questions[0] && quizData.questions[0].options[0] && 'correct' in quizData.questions[0].options[0]) {
+    return calcKnowledge();
+  }
+  // Otherwise, pick first result or random
+  const results = quizData.results;
+  const keys = Object.keys(results);
+  if (keys.length > 0) {
+    const key = keys[0];
+    const result = results[key];
+    return { key, label: result.title, result, type: 'typed' };
+  }
+  return { key: 'done', label: '测试完成', result: { title: '测试完成', desc: '感谢参与测试', traits: [] }, type: 'typed' };
 }
 
 // Generic scoring for tests with type-based results
@@ -2209,7 +2239,27 @@ function go(page) {
 }
 
 // ========== Init ==========
-function init() {
+async function init() {
+  // Load custom tests from API
+  try {
+    const resp = await fetch('/api/tests');
+    if (resp.ok) {
+      const data = await resp.json();
+      if (data.custom && data.custom.length > 0) {
+        data.custom.forEach(t => {
+          if (!tests.find(x => x.id === t.id)) {
+            tests.push(t);
+            DATA_MAP[t.id] = async () => {
+              const r = await fetch(`/api/test?id=${t.id}`);
+              if (r.ok) return await r.json();
+              return null;
+            };
+          }
+        });
+      }
+    }
+  } catch (e) {}
+
   renderCards('hotGrid', tests.filter(t => t.hot));
   renderCards('allGrid', tests);
 
