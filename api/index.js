@@ -21,6 +21,9 @@ export default {
 
     try {
       // API Routes
+      if (path === '/api/auth' && request.method === 'POST') {
+        return await handleAuth(request, env, corsHeaders);
+      }
       if (path === '/api/track' && request.method === 'POST') {
         return await handleTrack(request, env, corsHeaders);
       }
@@ -49,6 +52,23 @@ export default {
     }
   }
 };
+
+// ========== 密码验证 ==========
+async function handleAuth(request, env, corsHeaders) {
+  const { password } = await request.json();
+  const correctPassword = env.ADMIN_PASSWORD || 'testhub2024';
+
+  if (password === correctPassword) {
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
+  }
+
+  return new Response(JSON.stringify({ success: false, error: '密码错误' }), {
+    status: 401,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+  });
+}
 
 // ========== 记录访问 ==========
 async function handleTrack(request, env, corsHeaders) {
