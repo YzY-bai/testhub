@@ -1796,8 +1796,55 @@ function calcCustomResult() {
   if (quizData.questions[0] && quizData.questions[0].options[0] && 'correct' in quizData.questions[0].options[0]) {
     return calcKnowledge();
   }
-  // Otherwise, pick first result or random
-  const results = quizData.results;
+
+  // Check if questions have scores (like the love personality test)
+  const hasScores = quizData.questions[0] && quizData.questions[0].options[0] && 'scores' in quizData.questions[0].options[0];
+
+  if (hasScores) {
+    // Calculate dimension scores
+    const dimScores = {};
+    quizData.questions.forEach((q, i) => {
+      const ans = answers[i];
+      if (ans >= 0 && q.options[ans].scores) {
+        Object.entries(q.options[ans].scores).forEach(([dim, score]) => {
+          dimScores[dim] = (dimScores[dim] || 0) + score;
+        });
+      }
+    });
+
+    // Find the top dimensions
+    const sorted = Object.entries(dimScores).sort((a, b) => b[1] - a[1]);
+    const topDims = sorted.slice(0, 3).map(([d]) => d);
+
+    // Determine result based on dimensions
+    const nurturingDims = ['warmth', 'understand', 'guide', 'companion', 'loyalty'];
+    const drainingDims = ['coldViolence', 'oldIssues', 'passiveAggressive', 'indifference', 'thirdParty'];
+
+    const nurturingScore = nurturingDims.reduce((sum, d) => sum + (dimScores[d] || 0), 0);
+    const drainingScore = drainingDims.reduce((sum, d) => sum + (dimScores[d] || 0), 0);
+
+    let resultKey = 'balanced';
+    if (nurturingScore > drainingScore * 3) resultKey = 'nurturing';
+    else if (drainingScore > nurturingScore * 2) resultKey = 'draining';
+
+    const results = quizData.results || {};
+    const result = results[resultKey] || results[Object.keys(results)[0]] || {
+      title: '测试完成',
+      desc: '感谢参与测试',
+      traits: topDims
+    };
+
+    return {
+      key: resultKey,
+      label: result.title,
+      result: { ...result, traits: result.traits || topDims },
+      dimScores,
+      type: 'typed'
+    };
+  }
+
+  // Default: pick first result
+  const results = quizData.results || {};
   const keys = Object.keys(results);
   if (keys.length > 0) {
     const key = keys[0];
@@ -2140,6 +2187,8 @@ function renderResultPage(score) {
   } else if (score.type === 'typed') {
     const r = score.result;
     const hasScores = score.scores && score.scores.length > 0;
+    const hasDimScores = score.dimScores && Object.keys(score.dimScores).length > 0;
+
     html = `
       <div class="result-hero">
         <div class="result-icon">${svg(quizData.icon || 'star')}</div>
@@ -2149,19 +2198,29 @@ function renderResultPage(score) {
       </div>
       <div class="result-card">
         <div class="r-desc">${r.desc}</div>
-        <div class="tags">${r.traits.map(t => '<span class="tag">' + t + '</span>').join('')}</div>
-        ${hasScores ? `<div class="result-section-title">类型分布</div><canvas id="chart-typed" width="460" height="240" style="width:100%;margin:16px 0"></canvas>` : ''}
+        <div class="tags">${(r.traits || []).map(t => '<span class="tag">' + t + '</span>').join('')}</div>
+        ${hasDimScores ? `<div class="result-section-title">维度分析</div><canvas id="chart-typed" width="460" height="300" style="width:100%;margin:16px 0"></canvas>` : ''}
+        ${hasScores && !hasDimScores ? `<div class="result-section-title">类型分布</div><canvas id="chart-typed" width="460" height="240" style="width:100%;margin:16px 0"></canvas>` : ''}
         ${r.career ? `<div class="result-section-title">推荐职业方向</div><div class="tags">${r.career.map(c => '<span class="tag">' + c + '</span>').join('')}</div>` : ''}
+        ${r.advice ? `<div class="result-section-title" style="margin-top:16px">建议</div><div class="r-desc" style="margin-bottom:0">${r.advice}</div>` : ''}
         ${r.growth ? `<div class="result-section-title" style="margin-top:16px">成长建议</div><div class="r-desc" style="margin-bottom:0">${r.growth}</div>` : ''}
       </div>
       <div class="result-actions">
         <button class="btn-result btn-solid" onclick="generateResultImage()">保存结果图片</button>
-        <button class="btn-result btn-ghost-r" onclick="startQuiz('${currentTestId}')">重新测试</button>
+        <button class="btn-result btn-ghost-r" onclick="handleStartQuiz('${currentTestId}')">重新测试</button>
         <button class="btn-result btn-ghost-r" onclick="go('home')">返回测试广场</button>
       </div>`;
-    if (hasScores) {
+    if (hasDimScores) {
       setTimeout(() => {
-        const chartData = score.scores.map(([k,v]) => {
+        const chartData = Object.entries(score.dimScores).map(([k, v]) => ({
+          label: k,
+          value: v
+        }));
+        drawRadarChart('chart-typed', chartData, '#6366f1');
+      }, 100);
+    } else if (hasScores) {
+      setTimeout(() => {
+        const chartData = score.scores.map(([k, v]) => {
           const typeName = quizData.results?.[k]?.title || k;
           return { label: typeName, value: v };
         });
