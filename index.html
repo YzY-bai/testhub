@@ -2125,12 +2125,12 @@ function renderResultPage(score) {
             const ans = answers[i];
             const isCorrect = ans >= 0 && q.options[ans].correct;
             const correctIdx = q.options.findIndex(o => o.correct);
-            return `<div style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px">
-              <div style="color:rgba(255,255,255,${isCorrect ? '0.8' : '0.5'});margin-bottom:4px">
-                <span style="color:${isCorrect ? '#4ade80' : '#f87171'}">${isCorrect ? '✓' : '✗'}</span> Q${i+1}: ${q.text}
+            return `<div style="padding:10px 0;border-bottom:1px solid var(--border);font-size:13px">
+              <div style="color:${isCorrect ? '#16a34a' : 'var(--text-2)'};margin-bottom:4px">
+                <span style="color:${isCorrect ? '#16a34a' : '#dc2626'}">${isCorrect ? '✓' : '✗'}</span> Q${i+1}: ${q.text}
               </div>
-              ${!isCorrect && ans >= 0 ? '<div style="color:rgba(255,255,255,0.35);font-size:12px">你的答案: ' + q.options[ans].text + '</div>' : ''}
-              ${!isCorrect ? '<div style="color:rgba(255,255,255,0.5);font-size:12px">正确答案: ' + q.options[correctIdx].text + '</div>' : ''}
+              ${!isCorrect && ans >= 0 ? '<div style="color:var(--text-3);font-size:12px">你的答案: ' + q.options[ans].text + '</div>' : ''}
+              ${!isCorrect ? '<div style="color:var(--text-3);font-size:12px">正确答案: ' + q.options[correctIdx].text + '</div>' : ''}
             </div>`;
           }).join('')}
         </div>
