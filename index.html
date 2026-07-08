@@ -1198,7 +1198,7 @@ function svg(name) { return icons[name] || icons.star; }
 // ========== Render Cards ==========
 function renderCards(id, list) {
   document.getElementById(id).innerHTML = list.map(t => `
-    <div class="card" onclick="startQuiz('${t.id}')">
+    <div class="card" onclick="handleStartQuiz('${t.id}')">
       ${t.hot ? '<div class="badge badge-hot">HOT</div>' : ''}
       ${t.isNew ? '<div class="badge badge-new">NEW</div>' : ''}
       <div class="card-icon">${svg(t.icon)}</div>
@@ -1210,6 +1210,14 @@ function renderCards(id, list) {
       </div>
     </div>
   `).join('');
+}
+
+// Wrapper for async startQuiz
+function handleStartQuiz(testId) {
+  startQuiz(testId).catch(err => {
+    console.error('启动测试失败:', err);
+    alert('启动测试失败，请刷新重试');
+  });
 }
 
 // ========== History (localStorage) ==========
@@ -1699,15 +1707,13 @@ async function startQuiz(testId) {
   const getter = DATA_MAP[testId];
   if (!getter) { alert('该测试题库正在建设中，敬请期待！'); return; }
 
-  // Handle async data loading (for custom tests stored in KV)
-  if (getter.constructor.name === 'AsyncFunction' || (getter.constructor.name === 'Function' && getter.toString().includes('fetch'))) {
-    try {
-      quizData = await getter();
-    } catch (e) {
-      quizData = getter();
-    }
-  } else {
-    quizData = getter();
+  // Always try await first, fallback to sync
+  try {
+    quizData = await getter();
+  } catch (e) {
+    console.error('加载题库失败:', e);
+    alert('题库加载失败，请刷新重试。');
+    return;
   }
 
   if (!quizData || !quizData.questions || quizData.questions.length === 0) { alert('题库加载失败，请刷新重试。'); return; }
