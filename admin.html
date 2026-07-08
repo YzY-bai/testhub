@@ -1064,7 +1064,6 @@
     const stats = await fetchStats();
     const log = stats.recentLog || [];
     document.getElementById('visit-today').textContent = stats.today || 0;
-    document.getElementById('visit-total').textContent = stats.total || 0;
     const now = Date.now();
     const week = log.filter(l => l.time > now - 7*86400000).length;
     const month = log.filter(l => l.time > now - 30*86400000).length;
