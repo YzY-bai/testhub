@@ -1,7 +1,0 @@
-# Cloudflare Pages Redirects
-# 首页
-/               /index.html  200
-
-# 管理后台
-/admin          /admin.html  200
-/admin/         /admin.html  200
