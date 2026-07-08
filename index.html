@@ -1264,7 +1264,8 @@ function drawMBTIChart(dims) {
   const canvas = document.getElementById('chart-mbti');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const w = canvas.width, h = canvas.height;
+  const w = canvas.width = canvas.parentElement.clientWidth;
+  const h = canvas.height = 200;
   ctx.clearRect(0, 0, w, h);
 
   const pairs = [
@@ -1278,14 +1279,14 @@ function drawMBTIChart(dims) {
   pairs.forEach((p, i) => {
     const y = startY + i * (barH + gap);
     // Labels
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.fillStyle = '#64748b';
     ctx.font = '600 14px -apple-system, "PingFang SC", sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText(p.left, 35, y + barH/2 + 5);
     ctx.textAlign = 'left';
     ctx.fillText(p.right, w - 35, y + barH/2 + 5);
     // Bar bg
-    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx.fillStyle = '#e2e8f0';
     ctx.beginPath();
     ctx.roundRect(45, y, w - 90, barH, 6);
     ctx.fill();
@@ -1313,24 +1314,25 @@ function drawBarChart(canvasId, data, color) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const w = canvas.width, h = canvas.height;
+  const w = canvas.width = canvas.parentElement.clientWidth;
+  const h = canvas.height = 260;
   ctx.clearRect(0, 0, w, h);
 
   const maxVal = Math.max(...data.map(d => d.value), 1);
-  const barW = Math.min(40, (w - 80) / data.length - 8);
+  const barW = Math.min(36, (w - 80) / data.length - 10);
   const chartH = h - 60;
-  const startX = 60;
+  const startX = 50;
 
   // Grid lines
   for (let i = 0; i <= 4; i++) {
     const y = 20 + chartH * (1 - i/4);
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.strokeStyle = '#e2e8f0';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(startX, y);
     ctx.lineTo(w - 20, y);
     ctx.stroke();
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fillStyle = '#94a3b8';
     ctx.font = '11px -apple-system, "PingFang SC", sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText(Math.round(maxVal * i/4), startX - 8, y + 4);
@@ -1361,7 +1363,7 @@ function drawBarChart(canvasId, data, color) {
     }
 
     // Label
-    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.fillStyle = '#64748b';
     ctx.font = '11px -apple-system, "PingFang SC", sans-serif';
     ctx.textAlign = 'center';
     const label = d.label.length > 4 ? d.label.substring(0, 4) + '..' : d.label;
@@ -1378,7 +1380,8 @@ function drawRadarChart(canvasId, data, color) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const w = canvas.width, h = canvas.height;
+  const w = canvas.width = canvas.parentElement.clientWidth;
+  const h = canvas.height = 300;
   ctx.clearRect(0, 0, w, h);
 
   const cx = w / 2, cy = h / 2 + 10;
@@ -1389,7 +1392,7 @@ function drawRadarChart(canvasId, data, color) {
   // Draw grid circles
   for (let level = 1; level <= 4; level++) {
     const lr = r * level / 4;
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.strokeStyle = '#e2e8f0';
     ctx.lineWidth = 1;
     ctx.beginPath();
     for (let i = 0; i <= n; i++) {
@@ -1405,7 +1408,7 @@ function drawRadarChart(canvasId, data, color) {
   // Draw axis lines
   for (let i = 0; i < n; i++) {
     const angle = i * angleStep - Math.PI / 2;
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.strokeStyle = '#e2e8f0';
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
@@ -1449,7 +1452,7 @@ function drawRadarChart(canvasId, data, color) {
     // Label
     const lx = cx + (r + 25) * Math.cos(angle);
     const ly = cy + (r + 25) * Math.sin(angle);
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillStyle = '#475569';
     ctx.font = '12px -apple-system, "PingFang SC", sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -1466,7 +1469,8 @@ function drawScoreCircle(canvasId, pct, correct, total) {
   const canvas = document.getElementById(canvasId);
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  const w = canvas.width, h = canvas.height;
+  const w = canvas.width = canvas.parentElement.clientWidth;
+  const h = canvas.height = 200;
   ctx.clearRect(0, 0, w, h);
 
   const cx = w / 2, cy = h / 2;
@@ -1474,7 +1478,7 @@ function drawScoreCircle(canvasId, pct, correct, total) {
   const lineWidth = 12;
 
   // Background circle
-  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.strokeStyle = '#e2e8f0';
   ctx.lineWidth = lineWidth;
   ctx.lineCap = 'round';
   ctx.beginPath();
@@ -1482,7 +1486,7 @@ function drawScoreCircle(canvasId, pct, correct, total) {
   ctx.stroke();
 
   // Progress arc
-  const color = pct >= 80 ? '#4ade80' : pct >= 60 ? '#fbbf24' : '#f87171';
+  const color = pct >= 80 ? '#10b981' : pct >= 60 ? '#f59e0b' : '#ef4444';
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
   ctx.beginPath();
@@ -1490,27 +1494,27 @@ function drawScoreCircle(canvasId, pct, correct, total) {
   ctx.stroke();
 
   // Center text
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#0f172a';
   ctx.font = 'bold 36px -apple-system, "PingFang SC", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(pct + '%', cx, cy - 8);
 
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillStyle = '#64748b';
   ctx.font = '13px -apple-system, "PingFang SC", sans-serif';
   ctx.fillText(correct + ' / ' + total + ' 正确', cx, cy + 22);
 
   // Stats on sides
   const stats = [
-    { label: '正确', value: correct, color: '#4ade80' },
-    { label: '错误', value: total - correct, color: '#f87171' },
+    { label: '正确', value: correct, color: '#10b981' },
+    { label: '错误', value: total - correct, color: '#ef4444' },
   ];
   stats.forEach((s, i) => {
     const sx = i === 0 ? cx - 140 : cx + 140;
     ctx.fillStyle = s.color;
     ctx.font = 'bold 24px -apple-system, "PingFang SC", sans-serif';
     ctx.fillText(s.value, sx, cy - 5);
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillStyle = '#94a3b8';
     ctx.font = '12px -apple-system, "PingFang SC", sans-serif';
     ctx.fillText(s.label, sx, cy + 18);
   });
