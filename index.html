@@ -685,56 +685,56 @@
     .btn-dark:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* ==================== RESULT PAGE ==================== */
-    .result-page { background: #0f172a; color: #fff; }
+    .result-page { background: var(--bg); color: var(--text); }
     .result-hero {
-      max-width: 480px;
+      max-width: 520px;
       margin: 0 auto;
-      padding: 72px 32px 40px;
+      padding: 48px 32px 32px;
       text-align: center;
     }
     .result-icon {
-      width: 72px; height: 72px;
+      width: 80px; height: 80px;
       margin: 0 auto 20px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       display: flex;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 8px 24px rgba(102,126,234,0.3);
     }
-    .result-icon svg { width: 32px; height: 32px; color: #fff; }
+    .result-icon svg { width: 36px; height: 36px; color: #fff; }
     .result-hero h1 {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: 700;
-      letter-spacing: -1px;
-      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      color: var(--text);
     }
     .result-type {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
-      color: rgba(255,255,255,0.5);
-      letter-spacing: 3px;
+      color: var(--primary);
+      letter-spacing: 2px;
       text-transform: uppercase;
       margin-bottom: 6px;
     }
     .result-sub {
       font-size: 13px;
-      color: rgba(255,255,255,0.35);
+      color: var(--text-3);
     }
 
     .result-card {
-      max-width: 480px;
+      max-width: 520px;
       margin: 0 auto;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: var(--radius-lg);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       padding: 28px;
-      backdrop-filter: blur(10px);
     }
     .result-card .r-desc {
       font-size: 14px;
       line-height: 1.8;
-      color: rgba(255,255,255,0.6);
+      color: var(--text-2);
       margin-bottom: 20px;
     }
     .tags {
@@ -745,12 +745,12 @@
     }
     .tag {
       padding: 5px 12px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(37,99,235,0.08);
+      border: 1px solid rgba(37,99,235,0.12);
       border-radius: 6px;
       font-size: 12px;
       font-weight: 500;
-      color: rgba(255,255,255,0.7);
+      color: var(--primary);
     }
 
     /* Dimension Bars */
@@ -765,14 +765,14 @@
       width: 20px;
       font-size: 12px;
       font-weight: 600;
-      color: rgba(255,255,255,0.4);
+      color: var(--text-3);
       text-align: center;
     }
     .dim-bar {
       flex: 1;
-      height: 6px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 3px;
+      height: 8px;
+      background: var(--border-light);
+      border-radius: 4px;
       overflow: hidden;
       display: flex;
     }
@@ -780,69 +780,70 @@
       height: 100%;
       transition: width 0.8s ease 0.3s;
     }
-    .dim-seg.left { background: rgba(99,102,241,0.8); }
-    .dim-seg.right { background: rgba(168,85,247,0.8); }
+    .dim-seg.left { background: #6366f1; }
+    .dim-seg.right { background: #a855f7; }
 
     .result-section-title {
       font-size: 13px;
       font-weight: 600;
-      color: rgba(255,255,255,0.4);
+      color: var(--text-2);
       margin-bottom: 10px;
+      margin-top: 20px;
     }
 
     .result-actions {
-      max-width: 480px;
+      max-width: 520px;
       margin: 24px auto 0;
       padding: 0 32px 48px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
     .btn-result {
       width: 100%;
-      padding: 13px;
+      padding: 14px;
       border-radius: var(--radius-sm);
       border: none;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s;
       font-family: var(--font);
       text-align: center;
     }
     .btn-solid {
-      background: #fff;
-      color: #0f172a;
+      background: var(--primary);
+      color: #fff;
     }
-    .btn-solid:hover { background: #f1f5f9; }
+    .btn-solid:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
     .btn-ghost-r {
-      background: rgba(255,255,255,0.06);
-      color: rgba(255,255,255,0.6);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: var(--card);
+      color: var(--text-2);
+      border: 1px solid var(--border);
     }
-    .btn-ghost-r:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .btn-ghost-r:hover { background: var(--bg); border-color: var(--text-3); }
 
     .share-row {
       display: flex;
       justify-content: center;
       gap: 12px;
-      max-width: 480px;
+      max-width: 520px;
       margin: 0 auto;
       padding: 0 32px 64px;
     }
     .share-icon {
       width: 40px; height: 40px;
       border-radius: 10px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.06);
+      background: var(--card);
+      border: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       transition: all 0.15s;
     }
-    .share-icon:hover { background: rgba(255,255,255,0.12); }
-    .share-icon svg { width: 16px; height: 16px; color: rgba(255,255,255,0.5); }
+    .share-icon:hover { background: var(--bg); border-color: var(--text-3); }
+    .share-icon svg { width: 16px; height: 16px; color: var(--text-3); }
 
     /* ========== Responsive ========== */
     @media (max-width: 900px) {
@@ -1522,92 +1523,89 @@ function generateResultImage() {
   canvas.height = 1000;
   const ctx = canvas.getContext('2d');
 
-  // Background gradient
-  const grad = ctx.createLinearGradient(0, 0, 0, 1000);
-  grad.addColorStop(0, '#1e293b');
-  grad.addColorStop(1, '#0f172a');
-  ctx.fillStyle = grad;
+  // Light background
+  ctx.fillStyle = '#f8fafc';
   ctx.fillRect(0, 0, 750, 1000);
 
   // Get current result data
-  const resultHero = document.querySelector('.result-hero');
-  const resultCard = document.querySelector('.result-card');
-  if (!resultHero || !resultCard) return;
-
   const title = document.querySelector('.result-hero h1')?.textContent || '';
   const type = document.querySelector('.result-type')?.textContent || '';
   const sub = document.querySelector('.result-sub')?.textContent || '';
   const desc = document.querySelector('.result-card .r-desc')?.textContent || '';
   const tags = Array.from(document.querySelectorAll('.result-card .tag')).map(t => t.textContent);
 
-  let y = 80;
+  if (!title) return;
 
-  // TestHub logo
-  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  let y = 60;
+
+  // Logo area with gradient
+  const logoGrad = ctx.createLinearGradient(300, y, 450, y + 60);
+  logoGrad.addColorStop(0, '#667eea');
+  logoGrad.addColorStop(1, '#764ba2');
+  ctx.fillStyle = logoGrad;
   ctx.beginPath();
   ctx.roundRect(325, y, 60, 60, 15);
   ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(355, y + 30, 12, 0, Math.PI * 2);
-  ctx.stroke();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 20px -apple-system, "PingFang SC", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('T', 355, y + 40);
   y += 80;
 
   // Title
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 42px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+  ctx.fillStyle = '#0f172a';
+  ctx.font = 'bold 38px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
   ctx.textAlign = 'center';
   ctx.fillText(title, 375, y);
-  y += 45;
-
-  // Type
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.font = '600 18px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
-  ctx.fillText(type, 375, y);
-  y += 30;
-
-  // Sub
-  ctx.fillStyle = 'rgba(255,255,255,0.35)';
-  ctx.font = '14px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
-  ctx.fillText(sub, 375, y);
   y += 40;
 
-  // Separator line
-  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(100, y);
-  ctx.lineTo(650, y);
-  ctx.stroke();
-  y += 30;
+  // Type
+  ctx.fillStyle = '#2563eb';
+  ctx.font = '600 16px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+  ctx.fillText(type, 375, y);
+  y += 28;
 
-  // Description (word wrap)
-  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  // Sub
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '14px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+  ctx.fillText(sub, 375, y);
+  y += 36;
+
+  // Card background
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowColor = 'rgba(0,0,0,0.06)';
+  ctx.shadowBlur = 20;
+  ctx.shadowOffsetY = 4;
+  ctx.beginPath();
+  ctx.roundRect(50, y, 650, 0, 12);
+  ctx.fill();
+  ctx.shadowColor = 'transparent';
+
+  // Description
+  ctx.fillStyle = '#475569';
   ctx.font = '15px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
   ctx.textAlign = 'left';
-  const maxW = 600;
-  const lines = wrapText(ctx, desc, maxW);
+  const lines = wrapText(ctx, desc, 580);
   lines.forEach(line => {
-    ctx.fillText(line, 75, y);
-    y += 24;
+    ctx.fillText(line, 80, y + 30);
+    y += 26;
   });
   y += 20;
 
   // Tags
   if (tags.length > 0) {
-    ctx.font = '600 13px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
-    let tagX = 75;
+    ctx.font = '500 12px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+    let tagX = 80;
     tags.forEach(tag => {
-      const tw = ctx.measureText(tag).width + 24;
-      if (tagX + tw > 675) { tagX = 75; y += 36; }
-      ctx.fillStyle = 'rgba(255,255,255,0.06)';
+      const tw = ctx.measureText(tag).width + 20;
+      if (tagX + tw > 670) { tagX = 80; y += 32; }
+      ctx.fillStyle = 'rgba(37,99,235,0.08)';
       ctx.beginPath();
-      ctx.roundRect(tagX, y - 18, tw, 28, 6);
+      ctx.roundRect(tagX, y - 14, tw, 24, 5);
       ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.fillStyle = '#2563eb';
       ctx.textAlign = 'center';
-      ctx.fillText(tag, tagX + tw / 2, y);
+      ctx.fillText(tag, tagX + tw / 2, y + 2);
       tagX += tw + 8;
     });
     y += 40;
@@ -1616,12 +1614,11 @@ function generateResultImage() {
   // Dimension bars (for MBTI)
   const dims = document.querySelectorAll('.dim');
   if (dims.length > 0) {
-    y += 10;
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.font = '600 13px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.fillStyle = '#0f172a';
+    ctx.font = '600 14px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('维度分析', 375, y);
-    y += 25;
+    ctx.fillText('维度分析', 375, y + 10);
+    y += 35;
 
     dims.forEach(dim => {
       const labels = dim.querySelectorAll('.dim-label');
@@ -1631,48 +1628,52 @@ function generateResultImage() {
         const rightLabel = labels[1].textContent;
         const leftWidth = parseFloat(segs[0].style.width) || 50;
 
-        ctx.fillStyle = 'rgba(255,255,255,0.4)';
-        ctx.font = '600 12px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
+        ctx.fillStyle = '#64748b';
+        ctx.font = '600 13px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(leftLabel, 90, y + 4);
         ctx.fillText(rightLabel, 660, y + 4);
 
         // Bar background
-        ctx.fillStyle = 'rgba(255,255,255,0.06)';
+        ctx.fillStyle = '#e2e8f0';
         ctx.beginPath();
         ctx.roundRect(110, y - 6, 530, 12, 6);
         ctx.fill();
 
         // Left segment
-        ctx.fillStyle = 'rgba(99,102,241,0.8)';
+        ctx.fillStyle = '#6366f1';
         ctx.beginPath();
         ctx.roundRect(110, y - 6, 530 * leftWidth / 100, 12, 6);
         ctx.fill();
 
         // Right segment
-        ctx.fillStyle = 'rgba(168,85,247,0.8)';
+        ctx.fillStyle = '#a855f7';
         ctx.beginPath();
         ctx.roundRect(110 + 530 * leftWidth / 100, y - 6, 530 * (100 - leftWidth) / 100, 12, 6);
         ctx.fill();
 
-        y += 28;
+        y += 30;
       }
     });
-    y += 10;
   }
 
   // Footer
-  y = 950;
-  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fillStyle = '#94a3b8';
   ctx.font = '12px -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('TestHub · 测试中心 — 免费在线测试聚合平台', 375, y);
+  ctx.fillText('TestHub · 测试中心 — 免费在线测试聚合平台', 375, 960);
 
   // Download
-  const link = document.createElement('a');
-  link.download = 'TestHub-' + title + '-' + type + '.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
+  try {
+    const link = document.createElement('a');
+    link.download = 'TestHub-' + (title || 'result') + '.png';
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (e) {
+    alert('保存图片失败，请尝试右键保存');
+  }
 }
 
 function wrapText(ctx, text, maxWidth) {
@@ -2330,13 +2331,20 @@ async function init() {
 
   // Calculate real stats
   let totalQuestions = 0;
-  tests.forEach(t => {
+  for (const t of tests) {
     const getter = DATA_MAP[t.id];
     if (getter) {
-      const data = getter();
-      if (data && data.questions) totalQuestions += data.questions.length;
+      try {
+        const data = await getter();
+        if (data && data.questions) totalQuestions += data.questions.length;
+      } catch (e) {
+        // Fallback to count field
+        totalQuestions += t.count || 0;
+      }
+    } else {
+      totalQuestions += t.count || 0;
     }
-  });
+  }
   document.getElementById('statTests').textContent = tests.length;
   document.getElementById('statQuestions').textContent = totalQuestions.toLocaleString();
   document.getElementById('aboutTests').textContent = tests.length;
